@@ -1,33 +1,28 @@
+import { AddSongSchema } from "@shared/songs/schemas";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
-
 export const songsRouter = router({
-  addSong: protectedProcedure.input(
-    z.object({
-      title: z.string(),
-      artist: z.string(),
-      album: z.string().optional(),
-      year: z.number(),
-      songUrl: z.string().optional(),
-      songFile: z.instanceof(File).optional(),
-    }).refine((data) => {
-      return data.songUrl || data.songFile;
-    }, {
-      message: "Either songUrl or songFile must be provided",
-      path: ["songUrl", "songFile"],
-    }))
+  addSong: protectedProcedure
+    .input(AddSongSchema)
     .mutation(async ({ input, ctx }) => {
       const { title, artist, album, year, songUrl, songFile } = input;
-
+      let url = songUrl;
+      if (!songUrl) {
+        const blobClient = ctx.blobStorage
+          .getContainerClient("songs")
+          .getBlockBlobClient(songFile.name);
+        await blobClient.uploadData(songFile);
+        url = blobClient.url;
+      }
       const song = await ctx.prisma.song.create({
         data: {
           title,
-          artist,
-          album,
+          // artist,
+          // album,
           year,
-          songUrl,
-          songFile,
+          songUrl: url,
+          // songFile,
         },
       });
 

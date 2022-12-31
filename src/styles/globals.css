@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --primary: #404258;
+  --primary-light: #504e68;
+  --primary-dark: #303149;
+  --primary-contrast: #f2f2f2;
+  --secondary: #474e68;
+  --secondary-light: #575d78;
+  --secondary-dark: #373a50;
+  --secondary-contrast: #f2f2f2;
+  --accent: #50577a;
+  --accent-light: #60658b;
+  --accent-dark: #40466a;
+  --accent-contrast: #303149;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: var(--primary);
+  color: var(--primary-contrast);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
