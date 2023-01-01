@@ -57,7 +57,6 @@ model Artist {
   id        String   @id @default(cuid())
   updatedAt DateTime @updatedAt
   name      String
-  year      Int
   imageUrl  String
   Song      Song[]
   Album     Album[]

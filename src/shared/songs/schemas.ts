@@ -7,7 +7,10 @@ export const AddSongSchema = z
     album: z.string().optional(),
     year: z.number(),
     songUrl: z.string().optional(),
-    songFile: z.instanceof(Object).optional(),
+    songFile: z
+      .string()
+      .regex(/^data:audio\/([A-Za-z0-9]+);base64,/)
+      .optional(),
   })
   .refine(
     (data) => {

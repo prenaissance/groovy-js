@@ -1,3 +1,5 @@
+
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -22,7 +24,21 @@ module.exports = {
           dark: "var(--accent-dark)",
           contrast: "var(--accent-contrast)",
         },
-      }
+      },
+      keyframes: {
+        "show-up": {
+          "0%": { opacity: 0, transform: "translateY(min(100px, 10vw))" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+        "hide-down": {
+          "0%": { opacity: 1, transform: "translateY(0)" },
+          "100%": { opacity: 0, transform: "translateY(min(100px, 10vw))" },
+        },
+      },
+      animation: {
+        "show-up": "show-up 0.5s ease-out",
+        "hide-down": "hide-down 0.5s ease-in",
+      },
     },
   },
   plugins: [],
