@@ -53,6 +53,7 @@ export const artistsRouter = router({
         name: "asc",
       },
       select: {
+        id: true,
         name: true,
       },
     });

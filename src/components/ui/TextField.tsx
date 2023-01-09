@@ -19,7 +19,7 @@ function TextField(
     errorMessage,
     ...props
   }: Props,
-  ref: Ref<HTMLInputElement>
+  ref: Ref<HTMLInputElement>,
 ) {
   return (
     <div className={className}>
@@ -41,7 +41,7 @@ function TextField(
               "bg-accent-dark text-accent-contrast outline-primary-light":
                 color === "accent",
               "pl-8": !!icon,
-            }
+            },
           )}
           {...props}
         />

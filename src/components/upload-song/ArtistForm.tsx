@@ -1,9 +1,9 @@
+import React, { useCallback, useRef, useState } from "react";
 import { AddArtistSchema } from "@shared/artists/schemas";
 import { trpc } from "@utils/trpc";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
-import { useCallback, useRef, useState } from "react";
 import { fileToBase64 } from "@shared/utilities/files";
 import TextField from "@components/ui/TextField";
 import FileUpload from "@components/ui/FileUpload";
@@ -28,6 +28,9 @@ function ArtistForm({ onClose }: Props) {
   });
   const [errorMessage, setErrorMessage] = useState<string>("");
   const mutation = trpc.artists.addArtist.useMutation({
+    onMutate: () => {
+      setErrorMessage("");
+    },
     onSuccess: () => {
       queryClient.artists.invalidate();
       reset();
@@ -46,21 +49,23 @@ function ArtistForm({ onClose }: Props) {
         register("imageFile", { value: base64 });
       }
     },
-    [register]
+    [register],
   );
 
   const onSubmit = useCallback(
     (data: AddArtistForm) => {
       mutation.mutate(data);
-      reset();
-      onClose();
     },
-    [mutation, onClose, reset]
+    [mutation],
   );
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleSubmit(onSubmit)(e);
+      }}
       className="flex flex-col gap-4 rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
     >
       <NotificationBar variant="error" message={errorMessage} />
@@ -87,6 +92,7 @@ function ArtistForm({ onClose }: Props) {
       </label>
       <div className="mx-auto space-x-2">
         <Button
+          type="reset"
           className="min-w-[6rem]"
           variant="accent"
           outlined
@@ -96,6 +102,7 @@ function ArtistForm({ onClose }: Props) {
         </Button>
         <Button
           disabled={!isValid}
+          loading={mutation.isLoading}
           className="min-w-[6rem]"
           type="submit"
           variant="primary"

@@ -1,14 +1,23 @@
-import clsx from "clsx";
-import type { ButtonHTMLAttributes } from "react";
 import { memo } from "react";
+import type { ButtonHTMLAttributes } from "react";
+import clsx from "clsx";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 type Props = {
   variant?: "primary" | "secondary" | "accent";
   disabled?: boolean;
   outlined?: boolean;
+  loading?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 type SubButtonProps = Omit<Props, "outlined">;
+
+const spinner = (
+  <AiOutlineLoading3Quarters
+    className="mx-auto h-full animate-spin text-gray-500"
+    size="1rem"
+  />
+);
 
 function FilledButton({
   className,
@@ -22,7 +31,7 @@ function FilledButton({
       disabled={disabled}
       className={clsx(
         className,
-        "rounded-md border px-4 py-2 text-sm font-semibold outline-2 transition-colors",
+        "min-h-[1rem] rounded-md border px-4 py-2 text-sm font-semibold outline-2 transition-colors",
         {
           "border-gray-400 bg-gray-400 text-gray-500": disabled,
           "focus:outline focus:outline-blue-500 active:outline active:outline-blue-500":
@@ -35,7 +44,7 @@ function FilledButton({
             variant === "secondary",
           "border-primary-dark bg-accent text-accent-contrast hover:bg-accent-dark":
             variant === "accent",
-        }
+        },
       )}
       {...props}
     />
@@ -54,7 +63,7 @@ function OutlinedButton({
       disabled={disabled}
       className={clsx(
         className,
-        "rounded-md border bg-white/[0.02] px-4 py-2 text-sm font-semibold outline-2 transition duration-150 focus:outline focus:outline-blue-500 active:outline active:outline-blue-500",
+        "min-h-[1rem] rounded-md border bg-white/[0.02] px-4 py-2 text-sm font-semibold outline-2 transition duration-150 focus:outline focus:outline-blue-500 active:outline active:outline-blue-500",
         {
           "border-gray-500 text-gray-500": disabled,
           "focus:outline focus:outline-blue-500 active:outline active:outline-blue-500":
@@ -67,7 +76,7 @@ function OutlinedButton({
             variant === "secondary",
           "border-accent-light text-accent-light hover:border-accent-dark hover:text-accent-dark focus:border-accent-dark  focus:text-accent-dark active:border-accent-dark active:text-accent-dark":
             variant === "accent",
-        }
+        },
       )}
       {...props}
     />
@@ -78,9 +87,17 @@ function Button({
   variant = "primary",
   outlined = false,
   disabled = false,
+  loading = false,
+  children,
   ...rest
 }: Props) {
-  const props = { ...rest, disabled, variant };
+  const props = {
+    ...rest,
+    disabled,
+    variant,
+    loading,
+    children: loading ? spinner : children,
+  };
   return outlined ? <OutlinedButton {...props} /> : <FilledButton {...props} />;
 }
 // eslint-enable react/button-has-type

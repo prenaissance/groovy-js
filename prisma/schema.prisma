@@ -14,12 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Song {
   id           String   @id @default(cuid())
   createdAt    DateTime @default(now())
@@ -45,9 +39,10 @@ model Album {
   title     String
   artist    Artist   @relation(fields: [artistId], references: [id])
   artistId  String
+  imageUrl  String
   year      Int
-  genre     Genre[]
-  Song      Song[]
+  genres    Genre[]
+  songs     Song[]
 
   @@unique([artistId, title])
   @@index([artistId])
@@ -58,8 +53,8 @@ model Artist {
   updatedAt DateTime @updatedAt
   name      String
   imageUrl  String
-  Song      Song[]
-  Album     Album[]
+  songs     Song[]
+  albums    Album[]
 
   @@unique([name])
 }

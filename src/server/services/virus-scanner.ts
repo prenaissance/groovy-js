@@ -11,12 +11,11 @@ class VirusScanner {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
+  // eslint-disable-next-line no-var, no-unused-vars
   var virusScanner: VirusScanner | undefined;
 }
 
-export const virusScanner =
-  global.virusScanner || new VirusScanner();
+export const virusScanner = global.virusScanner || new VirusScanner();
 
 if (env.NODE_ENV !== "production") {
   global.virusScanner = virusScanner;

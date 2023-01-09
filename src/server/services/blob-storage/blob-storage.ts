@@ -5,7 +5,7 @@ import {
 import { env } from "@env/server.mjs";
 
 declare global {
-  // eslint-disable-next-line no-var
+  // eslint-disable-next-line no-var, no-unused-vars
   var blobStorage: BlobServiceClient | undefined;
 }
 
@@ -17,8 +17,8 @@ export const blobStorage =
     containerUrl,
     new StorageSharedKeyCredential(
       env.AZURE_STORAGE_ACCOUNT_NAME,
-      env.AZURE_STORAGE_ACCOUNT_KEY
-    )
+      env.AZURE_STORAGE_ACCOUNT_KEY,
+    ),
   );
 
 if (env.NODE_ENV !== "production") {

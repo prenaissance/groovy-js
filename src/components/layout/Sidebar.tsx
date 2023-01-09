@@ -16,7 +16,7 @@ function Sidebar({ isOpen, onCollapse }: Props) {
           {
             "translate-x-0": isOpen,
             "-translate-x-64": !isOpen,
-          }
+          },
         )}
       >
         <div className="flex flex-row justify-between gap-2 divide-x divide-accent bg-secondary">
@@ -37,7 +37,7 @@ function Sidebar({ isOpen, onCollapse }: Props) {
           {
             "visible opacity-100": isOpen,
             "pointer-events-none invisible opacity-0": !isOpen,
-          }
+          },
         )}
         onClick={onCollapse}
       />

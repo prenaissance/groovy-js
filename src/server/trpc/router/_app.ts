@@ -1,4 +1,5 @@
 import { router } from "../trpc";
+import { albumsRouter } from "./albums";
 import { artistsRouter } from "./artists";
 import { authRouter } from "./auth";
 import { exampleRouter } from "./example";
@@ -9,6 +10,7 @@ export const appRouter = router({
   auth: authRouter,
   songs: songsRouter,
   artists: artistsRouter,
+  albums: albumsRouter,
 });
 
 // export type definition of API

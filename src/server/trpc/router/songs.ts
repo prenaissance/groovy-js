@@ -6,9 +6,7 @@ export const songsRouter = router({
   addSong: protectedProcedure
     .input(AddSongSchema)
     .mutation(async ({ input, ctx }) => {
-      const {
-        title, artist, album, year, songUrl, songFile,
-      } = input;
+      const { title, artist, album, year, songUrl, songFile } = input;
 
       let url = songUrl;
       if (!songUrl) {

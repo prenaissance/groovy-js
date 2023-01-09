@@ -59,7 +59,7 @@ function Dialog({
             {
               "animate-show-up": isOpen,
               "animate-hide-down": !isOpen,
-            }
+            },
           )}
         >
           {children}

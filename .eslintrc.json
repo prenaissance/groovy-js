@@ -15,6 +15,7 @@
     "next/core-web-vitals"
   ],
   "rules": {
+    "prettier/prettier": "error",
     "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-explicit-any": "off",
@@ -56,6 +57,15 @@
     "jsx-a11y/no-static-element-interactions": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "camelcase": "off",
-    "vars-on-top": "off"
+    "vars-on-top": "off",
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ]
   }
 }

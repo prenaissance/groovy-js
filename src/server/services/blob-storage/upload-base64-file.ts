@@ -4,7 +4,7 @@ import { getContainerClient } from "./get-container-client";
 export const uploadBase64File = async (
   file: string,
   containerName: string,
-  name: string
+  name: string,
 ) => {
   const { buffer, mime, extension } = getBufferFromBase64(file);
   const fileName = `${name}-${Date.now()}.${extension}`;

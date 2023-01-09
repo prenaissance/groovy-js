@@ -1,4 +1,4 @@
-import type { ComponentProps, Ref} from "react";
+import type { ComponentProps, Ref } from "react";
 import { forwardRef, memo, useId } from "react";
 import TextField from "./TextField";
 
@@ -6,8 +6,10 @@ type Props = {
   options: string[];
 } & ComponentProps<typeof TextField>;
 
-function Autocomplete({ children, options, ...props }: Props,
-  ref: Ref<HTMLInputElement>) {
+function Autocomplete(
+  { children, options, ...props }: Props,
+  ref: Ref<HTMLInputElement>,
+) {
   const datalistId = useId();
 
   return (

@@ -75,7 +75,7 @@ const FileUpload: FC<Props> = ({
             "border-primary-contrast": isDragging,
             "border-accent-light": !isDragging,
           },
-          className
+          className,
         )}
         onClick={handleClick}
         onDragStart={handleDrag}

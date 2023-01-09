@@ -1,5 +1,3 @@
-
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -40,8 +38,8 @@ module.exports = {
         "hide-down": "hide-down 0.3s ease-in",
       },
       backdropBlur: {
-        xs: "2px"
-      }
+        xs: "2px",
+      },
     },
   },
   plugins: [],

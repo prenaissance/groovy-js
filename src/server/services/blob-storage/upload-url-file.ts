@@ -3,7 +3,7 @@ import { getContainerClient } from "./get-container-client";
 export const uploadUrlFile = async (
   url: string,
   containerName: string,
-  name: string
+  name: string,
 ) => {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
