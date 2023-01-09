@@ -7,6 +7,13 @@ type Props = {
   onFilesAdded?: (files: File[]) => void;
 } & InputHTMLAttributes<HTMLInputElement>;
 
+const trimFileName = (fileName: string, maxLength: number) => {
+  if (fileName.length <= maxLength) {
+    return fileName;
+  }
+  return `...${fileName.slice(maxLength - fileName.length)}`;
+};
+
 const FileUpload: FC<Props> = ({
   onFilesAdded = () => {},
   className,
@@ -92,8 +99,8 @@ const FileUpload: FC<Props> = ({
         </div>
       </div>
       {fileNames && (
-        <div className="mt-2 text-sm font-medium text-primary-contrast">
-          {`Selected: ${fileNames}`}
+        <div className="mt-2 break-all text-sm font-medium text-primary-contrast">
+          {`Selected: ${trimFileName(fileNames, 50)}`}
         </div>
       )}
     </>

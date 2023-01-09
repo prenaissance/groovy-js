@@ -5,12 +5,8 @@ import { router, publicProcedure } from "../trpc";
 export const exampleRouter = router({
   hello: publicProcedure
     .input(z.object({ text: z.string().nullish() }).nullish())
-    .query(({ input }) => {
-      return {
+    .query(({ input }) => ({
         greeting: `Hello ${input?.text ?? "world"}`,
-      };
-    }),
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
-  }),
+      })),
+  getAll: publicProcedure.query(({ ctx }) => ctx.prisma.example.findMany()),
 });

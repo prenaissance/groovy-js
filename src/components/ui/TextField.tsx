@@ -5,38 +5,64 @@ import clsx from "clsx";
 type Props = {
   color?: "primary" | "secondary" | "accent";
   icon?: ReactNode;
+  helperText?: string;
   className?: string;
+  errorMessage?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-const TextField = (
-  { className, icon, color = "primary", ...props }: Props,
+function TextField(
+  {
+    className,
+    icon,
+    color = "primary",
+    helperText,
+    errorMessage,
+    ...props
+  }: Props,
   ref: Ref<HTMLInputElement>
-) => {
+) {
   return (
-    <div className={clsx("relative flex w-fit", className)}>
-      {icon && (
-        <div className="pointer-events-none absolute flex h-full w-8 items-center justify-center text-primary-contrast">
-          {icon}
-        </div>
-      )}
-      <input
-        ref={ref}
-        className={clsx(
-          "w-full rounded-md px-2 py-1 outline outline-1 focus:outline-none focus:ring-2 focus:ring-blue-500",
-          {
-            "bg-primary-dark text-primary-contrast outline-accent-light":
-              color === "primary",
-            "bg-secondary-dark text-secondary-contrast outline-accent-light":
-              color === "secondary",
-            "bg-accent-dark text-accent-contrast outline-primary-light":
-              color === "accent",
-            "pl-8": !!icon,
-          }
+    <div className={className}>
+      <div className="relative flex">
+        {icon && (
+          <div className="pointer-events-none absolute flex h-full w-8 items-center justify-center text-primary-contrast">
+            {icon}
+          </div>
         )}
-        {...props}
-      />
+        <input
+          ref={ref}
+          className={clsx(
+            "w-full rounded-md px-2 py-1 outline outline-1 focus:outline-none focus:ring-2 focus:ring-blue-500",
+            {
+              "bg-primary-dark text-primary-contrast outline-accent-light":
+                color === "primary",
+              "bg-secondary-dark text-secondary-contrast outline-accent-light":
+                color === "secondary",
+              "bg-accent-dark text-accent-contrast outline-primary-light":
+                color === "accent",
+              "pl-8": !!icon,
+            }
+          )}
+          {...props}
+        />
+      </div>
+      {errorMessage ? (
+        <div className="text-xs text-red-500">{errorMessage}</div>
+      ) : (
+        helperText && (
+          <div
+            className={clsx("text-xs", {
+              "text-primary-contrast": color === "primary",
+              "text-secondary-contrast": color === "secondary",
+              "text-accent-contrast": color === "accent",
+            })}
+          >
+            {helperText}
+          </div>
+        )
+      )}
     </div>
   );
-};
+}
 
 export default forwardRef(TextField);

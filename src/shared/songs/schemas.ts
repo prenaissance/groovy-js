@@ -12,12 +12,7 @@ export const AddSongSchema = z
       .regex(/^data:audio\/([A-Za-z0-9]+);base64,/)
       .optional(),
   })
-  .refine(
-    (data) => {
-      return data.songUrl || data.songFile;
-    },
-    {
-      message: "Either songUrl or songFile must be provided",
-      path: ["songUrl", "songFile"],
-    }
-  );
+  .refine((data) => data.songUrl || data.songFile, {
+    message: "Either songUrl or songFile must be provided",
+    path: ["songUrl", "songFile"],
+  });

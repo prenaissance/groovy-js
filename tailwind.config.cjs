@@ -36,9 +36,12 @@ module.exports = {
         },
       },
       animation: {
-        "show-up": "show-up 0.5s ease-out",
-        "hide-down": "hide-down 0.5s ease-in",
+        "show-up": "show-up 0.3s ease-out",
+        "hide-down": "hide-down 0.3s ease-in",
       },
+      backdropBlur: {
+        xs: "2px"
+      }
     },
   },
   plugins: [],

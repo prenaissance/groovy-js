@@ -5,9 +5,9 @@ type Props = {
   onExpand: () => void;
 };
 
-const Navbar = ({ onExpand }: Props) => {
+function Navbar({ onExpand }: Props) {
   return (
-    <nav className="sticky flex flex-row items-center justify-start border-b border-accent-light bg-secondary p-1">
+    <nav className="sticky top-0 z-[49] flex flex-row items-center justify-start border-b border-accent-light bg-secondary p-1">
       <button
         className="hover:bg-secondary-dark/20 flex flex-row items-center p-1 text-secondary-contrast"
         onClick={onExpand}
@@ -27,6 +27,6 @@ const Navbar = ({ onExpand }: Props) => {
       </div>
     </nav>
   );
-};
+}
 
 export default Navbar;

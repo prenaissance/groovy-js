@@ -1,19 +1,18 @@
-import { forwardRef, InputHTMLAttributes, Ref, useId } from "react";
+import type { ComponentProps, Ref} from "react";
+import { forwardRef, memo, useId } from "react";
 import TextField from "./TextField";
 
 type Props = {
   options: string[];
-  color: "primary" | "secondary" | "accent";
-} & InputHTMLAttributes<HTMLInputElement>;
+} & ComponentProps<typeof TextField>;
 
-const Autocomplete = (
-  { children, options, ...props }: Props,
-  ref: Ref<HTMLInputElement>
-) => {
+function Autocomplete({ children, options, ...props }: Props,
+  ref: Ref<HTMLInputElement>) {
   const datalistId = useId();
+
   return (
     <>
-      <TextField {...props} list={datalistId} ref={ref}></TextField>
+      <TextField {...props} list={datalistId} ref={ref} />
       <datalist id={datalistId}>
         {options.map((option) => (
           <option key={option} value={option} />
@@ -21,6 +20,6 @@ const Autocomplete = (
       </datalist>
     </>
   );
-};
+}
 
-export default forwardRef(Autocomplete);
+export default memo(forwardRef(Autocomplete));

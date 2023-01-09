@@ -1,30 +1,33 @@
-import clsx from "clsx";
 import type { HTMLAttributes, KeyboardEventHandler, ReactNode } from "react";
-import { useEffect } from "react";
-import React from "react";
+import { useEffect, useRef } from "react";
+import clsx from "clsx";
 
 type Props = {
   children: ReactNode;
   dismissible?: boolean;
   onClose?: () => void;
-  open?: boolean;
+  isOpen?: boolean;
 } & HTMLAttributes<HTMLDivElement>;
 
-const Dialog = ({
+function Dialog({
   children,
   dismissible = true,
   onClose = () => {},
-  open = false,
+  isOpen = false,
   className,
-}: Props) => {
-  const ref = React.useRef<HTMLDialogElement>(null);
+}: Props) {
+  const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    if (open) {
+    if (isOpen) {
       !ref.current?.open && ref.current?.showModal();
     } else {
-      ref.current?.open && ref.current?.close();
+      const timeout = setTimeout(() => {
+        ref.current?.open && ref.current?.close();
+      }, 300); // animation duration
+
+      return () => clearTimeout(timeout);
     }
-  }, [open]);
+  }, [isOpen]);
 
   const handleDismiss = () => {
     if (dismissible) {
@@ -41,18 +44,22 @@ const Dialog = ({
   return (
     <dialog
       ref={ref}
-      className="border-0 backdrop:hidden"
+      className="overflow-y-hidden border-0 backdrop:hidden "
       onKeyDown={handleEscDismiss}
     >
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center  backdrop-blur-xs">
         <div
-          className="absolute inset-0 bg-black opacity-50"
+          className="absolute inset-0 z-[51] bg-black opacity-30 "
           onClick={handleDismiss}
         />
         <div
           className={clsx(
-            "rounded-md border border-accent-light bg-primary-light",
-            className
+            className,
+            "z-[52] rounded-md border border-accent-light bg-primary-light",
+            {
+              "animate-show-up": isOpen,
+              "animate-hide-down": !isOpen,
+            }
           )}
         >
           {children}
@@ -60,6 +67,6 @@ const Dialog = ({
       </div>
     </dialog>
   );
-};
+}
 
 export default Dialog;
