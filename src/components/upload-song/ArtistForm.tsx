@@ -1,9 +1,10 @@
-import React, { useCallback, useRef, useState } from "react";
-import { AddArtistSchema } from "@shared/artists/schemas";
-import { trpc } from "@utils/trpc";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
+
+import { trpc } from "@utils/trpc";
+import { AddArtistSchema } from "@shared/artists/schemas";
 import { fileToBase64 } from "@shared/utilities/files";
 import TextField from "@components/ui/TextField";
 import FileUpload from "@components/ui/FileUpload";

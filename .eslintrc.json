@@ -22,8 +22,8 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
-    "@typescript-eslint/no-unused-vars": "off",
-    "no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "no-unused-vars": "off",
     "quotes": [
       "error",
       "double"
@@ -66,6 +66,7 @@
           "error"
         ]
       }
-    ]
+    ],
+    "no-empty-pattern": "off"
   }
 }

@@ -87,7 +87,7 @@ function Button({
   variant = "primary",
   outlined = false,
   disabled = false,
-  loading = false,
+  loading,
   children,
   ...rest
 }: Props) {

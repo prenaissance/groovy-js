@@ -7,9 +7,12 @@ export const AddAlbumSchema = z
   .object({
     title: z.string(),
     artistId: z.string().cuid("You must select an artist"),
-    year: z
-      .number()
-      .lte(new Date().getFullYear(), "The album cannot be from the future!"),
+    year: z.preprocess(
+      (value) => parseInt(z.string().parse(value), 10),
+      z
+        .number()
+        .lte(new Date().getFullYear(), "The album cannot be from the future!"),
+    ),
     imageUrl: imageUrl.or(z.string().length(0)).optional(),
     imageFile: imageFile.optional(),
     genres: z.array(z.nativeEnum(Genre)),

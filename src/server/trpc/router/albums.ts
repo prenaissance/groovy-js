@@ -39,7 +39,7 @@ export const albumsRouter = router({
 
       return album;
     }),
-  getAllTitles: protectedProcedure.query(async ({ ctx }) => {
+  getAlbumNames: protectedProcedure.query(async ({ ctx }) => {
     const { prisma } = ctx;
     const albums = await prisma.album.findMany({
       orderBy: {
@@ -50,6 +50,7 @@ export const albumsRouter = router({
         title: true,
       },
     });
-    return albums.map((album) => album.title);
+
+    return albums;
   }),
 });

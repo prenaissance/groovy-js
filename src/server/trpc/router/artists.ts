@@ -57,6 +57,6 @@ export const artistsRouter = router({
         name: true,
       },
     });
-    return artists.map((artist) => artist.name);
+    return artists;
   }),
 });

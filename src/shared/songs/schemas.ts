@@ -1,3 +1,4 @@
+import { Genre } from "@prisma/client";
 import { z } from "zod";
 
 export const AddSongSchema = z
@@ -5,7 +6,13 @@ export const AddSongSchema = z
     title: z.string(),
     artist: z.string(),
     album: z.string().optional(),
-    year: z.number(),
+    year: z.preprocess(
+      (value) => parseInt(z.string().parse(value), 10),
+      z
+        .number()
+        .lte(new Date().getFullYear(), "The album cannot be from the future!"),
+    ),
+    genre: z.nativeEnum(Genre),
     songUrl: z.string().optional(),
     songFile: z
       .string()
