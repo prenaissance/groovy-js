@@ -1,5 +1,5 @@
 // !React.memo crashed this component, not sure why
-import { forwardRef } from "react";
+import { forwardRef, useMemo } from "react";
 import type { InputHTMLAttributes, ReactNode, Ref } from "react";
 import clsx from "clsx";
 
@@ -25,28 +25,32 @@ function TextField(
   }: Props,
   ref: Ref<HTMLInputElement>,
 ) {
-  const innerComponent = (
-    <input
-      ref={ref}
-      className={clsx(
-        "w-full rounded-md px-2 py-1 outline outline-1 focus:outline-none focus:ring-2 focus:ring-blue-500",
-        {
-          "bg-primary-dark text-primary-contrast outline-accent-light":
-            color === "primary",
-          "bg-secondary-dark text-secondary-contrast outline-accent-light":
-            color === "secondary",
-          "bg-accent-dark text-accent-contrast outline-primary-light":
-            color === "accent",
-          "pl-8": !!icon,
-        },
-      )}
-      {...props}
-    />
+  const innerComponent = useMemo(
+    () => (
+      <div className="relative min-w-[8rem] flex-1 after:absolute after:left-1/2 after:bottom-0 after:h-[1px] after:w-0 after:-translate-x-1/2 after:bg-blue-500 after:content-[''] focus-within:after:w-full after:motion-safe:transition-all">
+        <input
+          ref={ref}
+          className="w-full bg-transparent focus:outline-none"
+          {...props}
+        />
+      </div>
+    ),
+    [props, ref],
   );
 
   return (
     <div className={className}>
-      <div className="relative flex">
+      <div
+        className={clsx("relative flex w-full rounded-md border px-2 py-1", {
+          "border-accent-light bg-primary-dark text-primary-contrast":
+            color === "primary",
+          "border-accent-light bg-secondary-dark text-secondary-contrast":
+            color === "secondary",
+          "border-primary-light bg-accent-dark text-accent-contrast":
+            color === "accent",
+          "pl-8": !!icon,
+        })}
+      >
         {icon && (
           <div className="pointer-events-none absolute flex h-full w-8 items-center justify-center text-primary-contrast">
             {icon}

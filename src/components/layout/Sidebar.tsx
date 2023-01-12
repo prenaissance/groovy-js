@@ -26,7 +26,7 @@ function Sidebar({ isOpen, onCollapse }: Props) {
               className="flex flex-row items-center gap-2 px-4 py-2 text-white hover:text-white/80"
               onClick={onCollapse}
             >
-              <BiMenu size="1.5rem" />
+              <BiMenu size="24px" />
             </button>
           </div>
         </div>

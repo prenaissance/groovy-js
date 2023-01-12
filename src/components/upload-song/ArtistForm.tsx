@@ -22,6 +22,7 @@ function ArtistForm({ onClose }: Props) {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isValid },
   } = useForm<AddArtistForm>({
     resolver: zodResolver(AddArtistSchema),
@@ -47,10 +48,10 @@ function ArtistForm({ onClose }: Props) {
       if (files.length) {
         const file = files[0]!;
         const base64 = await fileToBase64(file);
-        register("imageFile", { value: base64 });
+        setValue("imageFile", base64);
       }
     },
-    [register],
+    [setValue],
   );
 
   const onSubmit = useCallback(
@@ -67,7 +68,7 @@ function ArtistForm({ onClose }: Props) {
         e.stopPropagation();
         handleSubmit(onSubmit)(e);
       }}
-      className="flex flex-col gap-4 rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
+      className="flex max-w-md flex-col gap-4 rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
     >
       <NotificationBar variant="error" message={errorMessage} />
       <label className="flex flex-col gap-2">

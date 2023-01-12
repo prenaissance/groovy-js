@@ -1,7 +1,8 @@
 import { memo } from "react";
 import type { HTMLAttributes } from "react";
 import clsx from "clsx";
-import { AiOutlineClose } from "react-icons/ai";
+
+import RemoveIcon from "./RemoveIcon";
 
 type Props = {
   noGutters?: boolean;
@@ -21,26 +22,6 @@ function Chip({
   children,
   ...props
 }: Props) {
-  const removeIcon = (
-    <button
-      type="button"
-      className="rounded-lg p-[0.125rem] focus:outline focus:outline-2 focus:outline-blue-500"
-    >
-      <AiOutlineClose
-        className={clsx(
-          "rounded-full bg-transparent transition-colors ease-in-out hover:scale-125 hover:bg-white/10",
-          {
-            "text-primary-contrast": variant === "primary",
-            "text-secondary-contrast": variant === "secondary",
-            "text-accent-contrast": variant === "accent",
-          },
-        )}
-        size="1rem"
-        onClick={onRemove}
-      />
-    </button>
-  );
-
   return (
     <div
       className={clsx(
@@ -66,7 +47,9 @@ function Chip({
       {...props}
     >
       {children}
-      {removable && removeIcon}
+      {removable && (
+        <RemoveIcon onRemove={onRemove} size="1rem" variant={variant} />
+      )}
     </div>
   );
 }

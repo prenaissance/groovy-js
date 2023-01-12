@@ -15,7 +15,7 @@ type SubButtonProps = Omit<Props, "outlined">;
 const spinner = (
   <AiOutlineLoading3Quarters
     className="mx-auto h-full animate-spin text-gray-500"
-    size="1rem"
+    size="16px"
   />
 );
 

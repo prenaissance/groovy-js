@@ -1,51 +1,52 @@
-import { forwardRef, useCallback, useId, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type {
   ChangeEventHandler,
   KeyboardEventHandler,
   ReactNode,
   ComponentProps,
 } from "react";
+
 import type { Option } from "@lib/options";
 import { getUniformOptions } from "@lib/options";
 import TextField from "./TextField";
 import Chip from "./Chip";
+import RemoveIcon from "./RemoveIcon";
 
 type Props = {
   options: Option[];
-  onChange: ChangeEventHandler;
+  onSelectedChange?: (data: string[]) => void;
 } & ComponentProps<typeof TextField>;
 
-type ContainerProps = {
-  selectedValues: string[];
-  children: ReactNode;
-  getDeleteChipHandler: (index: number) => () => void;
-};
-
-function Container({
-  selectedValues,
-  children,
-  getDeleteChipHandler,
-}: ContainerProps) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {selectedValues.map((value, index) => (
-        <Chip key={value} removable onRemove={getDeleteChipHandler(index)}>
-          {value}
-        </Chip>
-      ))}
-      {children}
-    </div>
-  );
-}
-
-function ChipsAutocomplete({ options, onChange, className, ...props }: Props) {
+function ChipsAutocomplete({
+  options,
+  onChange,
+  onSelectedChange,
+  className,
+  ...props
+}: Props) {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const dataListId = useId();
+  const shouldFocusRef = useRef(false);
+  const focusRef = useRef<HTMLInputElement>(null);
   const availableOptions = useMemo(() => {
     const uniformOptions = getUniformOptions(options);
     return uniformOptions.filter((opt) => !selectedValues.includes(opt.value));
   }, [options, selectedValues]);
+
+  useEffect(() => {
+    if (shouldFocusRef.current) {
+      shouldFocusRef.current = false;
+      focusRef.current?.focus();
+    }
+  });
 
   const handleEnterKeystroke = useCallback<
     KeyboardEventHandler<HTMLInputElement>
@@ -54,11 +55,14 @@ function ChipsAutocomplete({ options, onChange, className, ...props }: Props) {
       if (e.key !== "Enter") return;
       const option = availableOptions.find((opt) => opt.label === inputValue);
       if (option) {
-        setSelectedValues((prev) => [...prev, option.value]);
+        const newValues = [...selectedValues, option.value];
+        setSelectedValues(newValues);
+        onSelectedChange?.(newValues);
         setInputValue("");
+        shouldFocusRef.current = true;
       }
     },
-    [availableOptions, inputValue],
+    [availableOptions, inputValue, selectedValues, onSelectedChange],
   );
 
   const handleInputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
@@ -67,28 +71,44 @@ function ChipsAutocomplete({ options, onChange, className, ...props }: Props) {
       const option = availableOptions.find((opt) => opt.value === value);
       const label = option?.label ?? value;
       setInputValue(label);
-      onChange(e);
+      onChange?.(e);
     },
     [availableOptions, onChange],
   );
 
+  const handleClear = useCallback(() => {
+    setSelectedValues([]);
+    onSelectedChange?.([]);
+    shouldFocusRef.current = true;
+    setInputValue("");
+    // misses dispatching onChange event, 99% won't need this
+  }, [onSelectedChange]);
+
   const getDeleteChipHandler = useCallback(
     (index: number) => () => {
-      setSelectedValues((prev) => prev.filter((_, i) => i !== index));
+      const newValues = selectedValues.filter((_, i) => i !== index);
+      setSelectedValues(newValues);
+      onSelectedChange?.(newValues);
+      shouldFocusRef.current = true;
     },
-    [],
+    [selectedValues, onSelectedChange],
   );
 
   const ChipContainer = useCallback(
     (containerProps: { children: ReactNode }) => (
-      <Container
-        selectedValues={selectedValues}
-        getDeleteChipHandler={getDeleteChipHandler}
-      >
-        {containerProps.children}
-      </Container>
+      <div className="flex w-full justify-center">
+        <div className="flex flex-1 flex-wrap gap-2">
+          {selectedValues.map((value, index) => (
+            <Chip key={value} removable onRemove={getDeleteChipHandler(index)}>
+              {value}
+            </Chip>
+          ))}
+          {containerProps.children}
+        </div>
+        {selectedValues.length > 0 && <RemoveIcon onRemove={handleClear} />}
+      </div>
     ),
-    [selectedValues, getDeleteChipHandler],
+    [selectedValues, getDeleteChipHandler, handleClear],
   );
 
   return (
@@ -101,6 +121,7 @@ function ChipsAutocomplete({ options, onChange, className, ...props }: Props) {
         onChange={handleInputChange}
         onKeyDown={handleEnterKeystroke}
         container={ChipContainer}
+        ref={focusRef}
       />
       <datalist id={dataListId}>
         {availableOptions.map((opt) => (
@@ -113,4 +134,4 @@ function ChipsAutocomplete({ options, onChange, className, ...props }: Props) {
   );
 }
 
-export default forwardRef(ChipsAutocomplete);
+export default ChipsAutocomplete;

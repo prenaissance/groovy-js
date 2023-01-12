@@ -101,7 +101,7 @@ function Upload() {
                   className="hover:bg-secondary-dark/20 align-center flex flex-row justify-center self-start p-1 text-secondary-contrast"
                   onClick={handleArtistFormOpen}
                 >
-                  <BiPlusCircle size="1.5rem" />
+                  <BiPlusCircle size="24px" />
                 </button>
               </div>
             </label>
@@ -123,7 +123,7 @@ function Upload() {
                   className="hover:bg-secondary-dark/20 flex flex-row items-center justify-start self-start p-1 text-secondary-contrast"
                   onClick={handleAlbumFormOpen}
                 >
-                  <BiPlusCircle size="1.5rem" />
+                  <BiPlusCircle size="24px" />
                 </button>
               </div>
             </label>

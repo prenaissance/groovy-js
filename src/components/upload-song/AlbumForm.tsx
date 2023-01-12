@@ -12,6 +12,7 @@ import Button from "@components/ui/Button";
 import NotificationBar from "@components/ui/NotificationBar";
 import ChipsAutocomplete from "@components/ui/ChipsAutocomplete";
 import { Genre } from "@prisma/client";
+import Autocomplete from "@components/ui/Autocomplete";
 
 type AddAlbumForm = z.infer<typeof AddAlbumSchema>;
 type Props = {
@@ -22,10 +23,13 @@ const genres = Object.values(Genre);
 
 function AlbumForm({ onClose }: Props) {
   const queryClient = trpc.useContext();
+  const artists = trpc.artists.getArtistNames.useQuery().data;
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { errors, isValid },
   } = useForm<AddAlbumForm>({
     resolver: zodResolver(AddAlbumSchema),
@@ -51,10 +55,18 @@ function AlbumForm({ onClose }: Props) {
       if (files.length) {
         const file = files[0]!;
         const base64 = await fileToBase64(file);
-        register("imageFile", { value: base64 });
+        setValue("imageFile", base64);
       }
     },
-    [register],
+    [setValue],
+  );
+
+  const handleChangeGenres = useCallback(
+    (data: string[]) => {
+      setValue("genres", data as Genre[]);
+      // console.log(getValues("artistId"));
+    },
+    [setValue],
   );
 
   const onSubmit = useCallback(
@@ -71,7 +83,7 @@ function AlbumForm({ onClose }: Props) {
         e.stopPropagation();
         handleSubmit(onSubmit)(e);
       }}
-      className="flex flex-col gap-4 rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
+      className="flex max-w-md flex-col gap-4 rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
     >
       <NotificationBar variant="error" message={errorMessage} />
       <label className="flex flex-col gap-2">
@@ -82,6 +94,19 @@ function AlbumForm({ onClose }: Props) {
         />
       </label>
       <label className="flex flex-col gap-2">
+        Artist
+        <Autocomplete
+          className="w-full"
+          options={(artists ?? []).map((artist) => ({
+            label: artist.name,
+            value: artist.id,
+          }))}
+          {...register("artistId")}
+          errorMessage={errors.artistId?.message}
+        />
+      </label>
+
+      <label className="flex flex-col gap-2">
         Year
         <TextField errorMessage={errors.year?.message} {...register("year")} />
       </label>
@@ -90,8 +115,8 @@ function AlbumForm({ onClose }: Props) {
         <ChipsAutocomplete
           className="w-full"
           options={genres}
+          onSelectedChange={handleChangeGenres}
           errorMessage={errors.genres?.message}
-          {...register("genres")}
         />
       </label>
       <label className="flex flex-col gap-2">
