@@ -1,9 +1,9 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
-
 import { trpc } from "@utils/trpc";
+
 import { fileToBase64 } from "@shared/utilities/files";
 import { AddAlbumSchema } from "@shared/albums/schemas";
 import TextField from "@components/ui/TextField";
@@ -50,6 +50,15 @@ function AlbumForm({ onClose }: Props) {
     },
   });
 
+  const artistOptions = useMemo(
+    () =>
+      (artists ?? []).map((artist) => ({
+        label: artist.name,
+        value: artist.id,
+      })),
+    [artists],
+  );
+
   const handleFilesAdded = useCallback(
     async (files: File[]) => {
       if (files.length) {
@@ -64,7 +73,19 @@ function AlbumForm({ onClose }: Props) {
   const handleChangeGenres = useCallback(
     (data: string[]) => {
       setValue("genres", data as Genre[]);
-      // console.log(getValues("artistId"));
+
+      console.log({
+        values: getValues(),
+        errors,
+      });
+      console.log(AddAlbumSchema.safeParse(getValues()));
+    },
+    [setValue],
+  );
+
+  const handleSelectArtist = useCallback(
+    (data: string) => {
+      setValue("artistId", data);
     },
     [setValue],
   );
@@ -78,13 +99,9 @@ function AlbumForm({ onClose }: Props) {
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleSubmit(onSubmit)(e);
-      }}
-      className="flex max-w-md flex-col gap-4 rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
-    >
+      onSubmit={() => {handleSubmit(onSubmit)}
+      className="flex max-h-[80vh] max-w-md flex-col gap-4 overflow-y-auto rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
+    >}
       <NotificationBar variant="error" message={errorMessage} />
       <label className="flex flex-col gap-2">
         Title
@@ -97,18 +114,20 @@ function AlbumForm({ onClose }: Props) {
         Artist
         <Autocomplete
           className="w-full"
-          options={(artists ?? []).map((artist) => ({
-            label: artist.name,
-            value: artist.id,
-          }))}
-          {...register("artistId")}
+          options={artistOptions}
+          name="artistId"
+          onSelectedChange={handleSelectArtist}
           errorMessage={errors.artistId?.message}
         />
       </label>
 
       <label className="flex flex-col gap-2">
         Year
-        <TextField errorMessage={errors.year?.message} {...register("year")} />
+        <TextField
+          type="number"
+          errorMessage={errors.year?.message}
+          {...register("year")}
+        />
       </label>
       <label className="flex flex-col gap-2">
         Genres
@@ -138,7 +157,7 @@ function AlbumForm({ onClose }: Props) {
       </label>
       <div className="mx-auto space-x-2">
         <Button
-          type="reset"
+          type="button"
           className="min-w-[6rem]"
           variant="accent"
           outlined

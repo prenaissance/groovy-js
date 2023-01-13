@@ -41,15 +41,20 @@ function TextField(
   return (
     <div className={className}>
       <div
-        className={clsx("relative flex w-full rounded-md border px-2 py-1", {
-          "border-accent-light bg-primary-dark text-primary-contrast":
-            color === "primary",
-          "border-accent-light bg-secondary-dark text-secondary-contrast":
-            color === "secondary",
-          "border-primary-light bg-accent-dark text-accent-contrast":
-            color === "accent",
-          "pl-8": !!icon,
-        })}
+        className={clsx(
+          "relative flex w-full rounded-md border px-2 py-1",
+          {
+            "pl-8": !!icon,
+            "border-red-500": !!errorMessage,
+            "bg-primary-dark text-primary-contrast": color === "primary",
+            "bg-secondary-dark text-secondary-contrast": color === "secondary",
+            "bg-accent-dark text-accent-contrast": color === "accent",
+          },
+          !errorMessage && {
+            "border-accent-light": color === "primary" || color === "secondary",
+            "border-primary-light": color === "accent",
+          },
+        )}
       >
         {icon && (
           <div className="pointer-events-none absolute flex h-full w-8 items-center justify-center text-primary-contrast">

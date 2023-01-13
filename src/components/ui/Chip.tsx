@@ -48,7 +48,7 @@ function Chip({
     >
       {children}
       {removable && (
-        <RemoveIcon onRemove={onRemove} size="1rem" variant={variant} />
+        <RemoveIcon onRemove={onRemove} size="16px" variant={variant} />
       )}
     </div>
   );

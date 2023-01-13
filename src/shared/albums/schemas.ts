@@ -1,11 +1,12 @@
 import { Genre } from "@prisma/client";
 import { imageFile } from "@shared/validators/files";
+import { trimCuid } from "@shared/validators/ids";
 import { imageUrl } from "@shared/validators/urls";
 import { z } from "zod";
 
 export const AddAlbumSchema = z
   .object({
-    title: z.string(),
+    title: z.string().min(1),
     artistId: z.string().cuid("You must select an artist"),
     year: z.preprocess(
       (value) => parseInt(z.string().parse(value), 10),

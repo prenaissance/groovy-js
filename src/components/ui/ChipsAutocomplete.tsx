@@ -6,12 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type {
-  ChangeEventHandler,
-  KeyboardEventHandler,
-  ReactNode,
-  ComponentProps,
-} from "react";
+import type { ChangeEventHandler, ReactNode, ComponentProps } from "react";
 
 import type { Option } from "@lib/options";
 import { getUniformOptions } from "@lib/options";
@@ -48,12 +43,12 @@ function ChipsAutocomplete({
     }
   });
 
-  const handleEnterKeystroke = useCallback<
-    KeyboardEventHandler<HTMLInputElement>
-  >(
+  const handleInputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
-      if (e.key !== "Enter") return;
-      const option = availableOptions.find((opt) => opt.label === inputValue);
+      const { value } = e.target;
+      const option = availableOptions.find((opt) => opt.value === value);
+      const label = option?.label ?? value;
+      setInputValue(label);
       if (option) {
         const newValues = [...selectedValues, option.value];
         setSelectedValues(newValues);
@@ -61,19 +56,9 @@ function ChipsAutocomplete({
         setInputValue("");
         shouldFocusRef.current = true;
       }
-    },
-    [availableOptions, inputValue, selectedValues, onSelectedChange],
-  );
-
-  const handleInputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
-    (e) => {
-      const { value } = e.target;
-      const option = availableOptions.find((opt) => opt.value === value);
-      const label = option?.label ?? value;
-      setInputValue(label);
       onChange?.(e);
     },
-    [availableOptions, onChange],
+    [availableOptions, onChange, onSelectedChange, selectedValues],
   );
 
   const handleClear = useCallback(() => {
@@ -119,7 +104,6 @@ function ChipsAutocomplete({
         className={className}
         value={inputValue}
         onChange={handleInputChange}
-        onKeyDown={handleEnterKeystroke}
         container={ChipContainer}
         ref={focusRef}
       />

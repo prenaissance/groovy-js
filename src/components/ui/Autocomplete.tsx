@@ -17,14 +17,15 @@ export type AutocompleteRefValue = { value: string; inputValue: string };
 type Props = {
   options: Option[];
   defaultInputValue?: string;
-  onInputChange?: ChangeEventHandler<HTMLInputElement>;
+  onSelectedChange?: (value: string) => void;
+  onInputChange?: (value: string) => void;
 } & ComponentProps<typeof TextField>;
 
 function Autocomplete(
   {
     defaultValue = "",
     defaultInputValue = "",
-    onChange,
+    onSelectedChange,
     onInputChange,
     options,
     ...props
@@ -41,15 +42,20 @@ function Autocomplete(
       const option = uniformOptions.find((opt) => opt.value === currentValue);
 
       setInputValue(currentValue);
-      onInputChange?.(e);
+      onInputChange?.(currentValue);
 
       if (option) {
         valueRef.current = option.value;
         setInputValue(option.label);
-        onChange?.(e);
+        onSelectedChange?.(option.value);
+      }
+
+      if (!option && currentValue === "") {
+        valueRef.current = "";
+        onSelectedChange?.("");
       }
     },
-    [onChange, onInputChange, uniformOptions],
+    [onSelectedChange, onInputChange, uniformOptions],
   );
 
   useImperativeHandle(
