@@ -48,7 +48,7 @@ function ArtistForm({ onClose }: Props) {
       if (files.length) {
         const file = files[0]!;
         const base64 = await fileToBase64(file);
-        setValue("imageFile", base64);
+        setValue("imageFile", base64, { shouldValidate: true });
       }
     },
     [setValue],

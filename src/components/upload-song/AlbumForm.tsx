@@ -29,7 +29,6 @@ function AlbumForm({ onClose }: Props) {
     handleSubmit,
     reset,
     setValue,
-    getValues,
     formState: { errors, isValid },
   } = useForm<AddAlbumForm>({
     resolver: zodResolver(AddAlbumSchema),
@@ -64,7 +63,7 @@ function AlbumForm({ onClose }: Props) {
       if (files.length) {
         const file = files[0]!;
         const base64 = await fileToBase64(file);
-        setValue("imageFile", base64);
+        setValue("imageFile", base64, { shouldValidate: true });
       }
     },
     [setValue],
@@ -72,20 +71,14 @@ function AlbumForm({ onClose }: Props) {
 
   const handleChangeGenres = useCallback(
     (data: string[]) => {
-      setValue("genres", data as Genre[]);
-
-      console.log({
-        values: getValues(),
-        errors,
-      });
-      console.log(AddAlbumSchema.safeParse(getValues()));
+      setValue("genres", data as Genre[], { shouldValidate: true });
     },
     [setValue],
   );
 
   const handleSelectArtist = useCallback(
     (data: string) => {
-      setValue("artistId", data);
+      setValue("artistId", data, { shouldValidate: true });
     },
     [setValue],
   );
@@ -99,9 +92,9 @@ function AlbumForm({ onClose }: Props) {
 
   return (
     <form
-      onSubmit={() => {handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex max-h-[80vh] max-w-md flex-col gap-4 overflow-y-auto rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
-    >}
+    >
       <NotificationBar variant="error" message={errorMessage} />
       <label className="flex flex-col gap-2">
         Title
