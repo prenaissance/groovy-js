@@ -39,10 +39,6 @@
       }
     ],
     "import/prefer-default-export": "off",
-    "linebreak-style": [
-      "error",
-      "windows"
-    ],
     "react/jsx-filename-extension": [
       "error",
       {
@@ -67,6 +63,7 @@
         ]
       }
     ],
+    "linebreak-style": "off",
     "no-empty-pattern": "off",
     "consistent-return": "off",
     "no-underscore-dangle": "off"
