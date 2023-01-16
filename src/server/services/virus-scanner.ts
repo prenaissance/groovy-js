@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+// temp solution for placeholder
 import { env } from "@env/server.mjs";
 
 class VirusScanner {

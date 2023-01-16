@@ -18,11 +18,11 @@ function Dialog({
 }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    if (isOpen) {
-      !ref.current?.open && ref.current?.showModal();
-    } else {
+    if (isOpen && !ref.current?.open) {
+      ref.current?.showModal();
+    } else if (!isOpen && ref.current?.open) {
       const timeout = setTimeout(() => {
-        ref.current?.open && ref.current?.close();
+        ref.current?.close();
       }, 300); // animation duration
 
       return () => clearTimeout(timeout);
@@ -42,10 +42,11 @@ function Dialog({
   };
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <dialog
+      onKeyDown={handleEscDismiss}
       ref={ref}
       className="overflow-y-hidden border-0 backdrop:hidden "
-      onKeyDown={handleEscDismiss}
     >
       <div className="fixed inset-0 flex items-center justify-center  backdrop-blur-xs">
         <div

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { DragEvent, FC, InputHTMLAttributes } from "react";
+import type { DragEvent, InputHTMLAttributes } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import clsx from "clsx";
 
@@ -14,11 +14,7 @@ const trimFileName = (fileName: string, maxLength: number) => {
   return `...${fileName.slice(maxLength - fileName.length)}`;
 };
 
-const FileUpload: FC<Props> = ({
-  onFilesAdded = () => {},
-  className,
-  ...props
-}) => {
+function FileUpload({ onFilesAdded = () => {}, className, ...props }: Props) {
   const [isDragging, setIsDragging] = useState(false);
   const [fileNames, setFileNames] = useState<string>("");
   const ref = React.createRef<HTMLInputElement>();
@@ -68,7 +64,7 @@ const FileUpload: FC<Props> = ({
     <>
       <div
         tabIndex={0}
-        role="input"
+        role="button"
         className={clsx(
           "flex h-fit w-fit flex-col items-center justify-center rounded-md border-2 border-dashed px-2 py-8 hover:border-primary-contrast focus:border-primary-contrast",
           {
@@ -105,5 +101,5 @@ const FileUpload: FC<Props> = ({
       )}
     </>
   );
-};
+}
 export default FileUpload;

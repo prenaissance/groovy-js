@@ -8,10 +8,10 @@ export const formatErrors = (
   errors,
 ) =>
   Object.entries(errors)
-    .map(([name, value]) => {
-      if (value && "_errors" in value)
-        return `${name}: ${value._errors.join(", ")}\n`;
-    })
+    .map(
+      ([name, value]) =>
+        value && "_errors" in value && `${name}: ${value._errors.join(", ")}\n`,
+    )
     .filter(Boolean);
 
 if (!_clientEnv.success) {
@@ -22,7 +22,7 @@ if (!_clientEnv.success) {
   throw new Error("Invalid environment variables");
 }
 
-for (const key of Object.keys(_clientEnv.data)) {
+Object.keys(_clientEnv.data).forEach((key) => {
   if (!key.startsWith("NEXT_PUBLIC_")) {
     console.warn(
       `❌ Invalid public environment variable name: ${key}. It must begin with 'NEXT_PUBLIC_'`,
@@ -30,6 +30,6 @@ for (const key of Object.keys(_clientEnv.data)) {
 
     throw new Error("Invalid public environment variable name");
   }
-}
+});
 
 export const env = _clientEnv.data;

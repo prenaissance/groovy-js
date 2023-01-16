@@ -11,6 +11,7 @@ function Sidebar({ isOpen, onCollapse }: Props) {
   return (
     <>
       <div
+        role="toolbar"
         className={clsx(
           " fixed inset-y-0 left-0 z-[50] flex w-64 flex-col overflow-x-hidden border-r border-accent-light bg-secondary transition-transform duration-75 ease-out",
           {
