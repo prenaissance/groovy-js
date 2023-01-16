@@ -4,8 +4,8 @@ import { z } from "zod";
 export const AddSongSchema = z
   .object({
     title: z.string(),
-    artist: z.string(),
-    album: z.string().optional(),
+    artistId: z.string(),
+    albumId: z.string().optional(),
     year: z.preprocess(
       (value) => parseInt(z.string().parse(value), 10),
       z

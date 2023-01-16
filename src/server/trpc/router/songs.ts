@@ -1,4 +1,6 @@
+import { uploadBase64File, uploadUrlFile } from "@server/services/blob-storage";
 import { AddSongSchema } from "@shared/songs/schemas";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
@@ -6,24 +8,55 @@ export const songsRouter = router({
   addSong: protectedProcedure
     .input(AddSongSchema)
     .mutation(async ({ input, ctx }) => {
-      const { title, artist, album, year, songUrl, songFile } = input;
+      const { title, artistId, albumId, year, songUrl, songFile, genre } =
+        input;
+      const { prisma, session } = ctx;
 
-      let url = songUrl;
-      if (!songUrl) {
-        const blobClient = ctx.blobStorage
-          .getContainerClient("songs")
-          .getBlockBlobClient(songFile.name);
-        await blobClient.uploadData(songFile);
-        url = blobClient.url;
+      const songExists = await prisma.song.findUnique({
+        where: {
+          artistId_title: {
+            artistId,
+            title,
+          },
+        },
+      });
+
+      if (songExists) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Song already exists",
+        });
       }
-      const song = await ctx.prisma.song.create({
+
+      const album = await prisma.album.findUnique({
+        where: {
+          id: albumId,
+        },
+        include: {
+          artist: true,
+        },
+      });
+
+      if (!album || album.artistId !== artistId) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Album does not match artist",
+        });
+      }
+
+      const url = songFile
+        ? await uploadBase64File(songFile, "songs", title)
+        : await uploadUrlFile(songUrl!, "songs", title);
+
+      const song = await prisma.song.create({
         data: {
           title,
-          // artist,
-          // album,
+          artistId,
+          albumId,
           year,
+          genre,
           songUrl: url,
-          // songFile,
+          uploadedById: session.user.id,
         },
       });
 

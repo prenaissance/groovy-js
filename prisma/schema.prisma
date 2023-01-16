@@ -29,7 +29,7 @@ model Song {
   uploadedBy   User     @relation(fields: [uploadedById], references: [id])
   uploadedById String
 
-  @@unique([artistId, albumId, title])
+  @@unique([artistId, title])
   @@index([artistId, albumId])
 }
 
