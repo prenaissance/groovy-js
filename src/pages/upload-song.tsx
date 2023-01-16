@@ -5,6 +5,7 @@ import type { z } from "zod";
 import { BiPlusCircle } from "react-icons/bi";
 
 import { trpc } from "@utils/trpc";
+import { Genre } from "@prisma/client";
 import TextField from "@components/ui/TextField";
 import FileUpload from "@components/ui/FileUpload";
 import Dialog from "@components/ui/Dialog";
@@ -14,8 +15,11 @@ import AlbumForm from "@components/upload-song/AlbumForm";
 import { AddSongSchema } from "@shared/songs/schemas";
 import { fileToBase64 } from "@shared/utilities/files";
 import Head from "next/head";
+import Button from "@components/ui/Button";
 
 type AddSongForm = z.infer<typeof AddSongSchema>;
+
+const genres = Object.values(Genre);
 
 function Upload() {
   const queryClient = trpc.useContext();
@@ -30,6 +34,8 @@ function Upload() {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm<AddSongForm>({
     resolver: zodResolver(AddSongSchema),
@@ -38,6 +44,7 @@ function Upload() {
 
   const [isArtistFormOpen, setIsArtistFormOpen] = useState(false);
   const [isAlbumFormOpen, setIsAlbumFormOpen] = useState(false);
+  // will be used for a preview audio player
   const [file, setFile] = React.useState<File | null>(null);
 
   const artistOptions = useMemo(
@@ -62,11 +69,30 @@ function Upload() {
   const handleAlbumFormOpen = useCallback(() => {
     setIsAlbumFormOpen(true);
   }, []);
-  const handleFilesAdded = useCallback((files: File[]) => {
-    if (files.length) {
-      setFile(files[0]!);
-    }
-  }, []);
+  const handleFilesAdded = useCallback(
+    async (files: File[]) => {
+      if (files.length) {
+        const song = files[0]!;
+        setFile(song);
+        const base64 = await fileToBase64(song);
+        setValue("songFile", base64, { shouldValidate: true });
+
+        const titleValue = getValues("title");
+        if (!titleValue) {
+          setValue("title", song.name.replace(/\..*$/, ""), {
+            shouldValidate: true,
+          });
+        }
+      }
+    },
+    [setValue, getValues],
+  );
+  const getSelectValueHandler = useCallback(
+    (key: keyof AddSongForm) => (value: string) => {
+      setValue(key, value, { shouldValidate: true });
+    },
+    [setValue],
+  );
 
   return (
     <>
@@ -88,13 +114,15 @@ function Upload() {
               <TextField {...register("title")} />
             </label>
             <label>
-              Artist
+              Artist / Group
               <div className="flex flex-row items-center justify-start">
                 <Autocomplete
                   className="flex-1"
                   helperText="Add an artist if you can't find them in the list!"
                   options={artistOptions}
-                  {...register("artist")}
+                  name="artistId"
+                  onSelectedChange={getSelectValueHandler("artistId")}
+                  errorMessage={errors.artistId?.message}
                 />
                 <button
                   type="button"
@@ -107,7 +135,10 @@ function Upload() {
             </label>
             <label>
               Year
-              <TextField {...register("year")} />
+              <TextField
+                {...register("year")}
+                errorMessage={errors.year?.message}
+              />
             </label>
             <label>
               Album
@@ -116,7 +147,9 @@ function Upload() {
                   className="flex-1"
                   helperText="Register the album if you can't find it!"
                   options={albumOptions}
-                  {...register("album")}
+                  name="albumId"
+                  onSelectedChange={getSelectValueHandler("albumId")}
+                  errorMessage={errors.albumId?.message}
                 />
                 <button
                   type="button"
@@ -127,6 +160,15 @@ function Upload() {
                 </button>
               </div>
             </label>
+            <label>
+              Genre
+              <Autocomplete
+                options={genres}
+                name="genre"
+                onSelectedChange={getSelectValueHandler("genre")}
+                errorMessage={errors.genre?.message}
+              />
+            </label>
             <label className="col-span-2">
               Song URL
               <TextField
@@ -134,6 +176,7 @@ function Upload() {
                 className="w-full"
                 id="songUrl"
                 {...register("songUrl")}
+                errorMessage={errors.songUrl?.message}
               />
             </label>
             <FileUpload
@@ -143,6 +186,13 @@ function Upload() {
               multiple={false}
               onFilesAdded={handleFilesAdded}
             />
+            <Button
+              className="col-span-2 mx-auto w-fit px-16"
+              type="submit"
+              variant="positive"
+            >
+              Add song
+            </Button>
           </fieldset>
         </form>
         <Dialog isOpen={isArtistFormOpen} onClose={handleArtistFormClose}>

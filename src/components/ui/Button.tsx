@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 type Props = {
-  variant?: "primary" | "secondary" | "accent";
+  variant?: "primary" | "secondary" | "accent" | "positive";
   disabled?: boolean;
   outlined?: boolean;
   loading?: boolean;
@@ -44,6 +44,8 @@ function FilledButton({
             variant === "secondary",
           "border-primary-dark bg-accent text-accent-contrast hover:bg-accent-dark":
             variant === "accent",
+          "border-emerald-900 bg-emerald-600 text-emerald-100 hover:bg-emerald-700":
+            variant === "positive",
         },
       )}
       {...props}
