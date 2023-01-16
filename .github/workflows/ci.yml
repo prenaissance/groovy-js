@@ -61,7 +61,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
-        id: pnpm-install
         with:
           run_install: false
           version: 7
@@ -74,8 +73,8 @@ jobs:
           restore-keys: |
             pnpm-store-
 
-      - name: Install dev dependencies
-        run: pnpm install --frozen-lockfile --dev
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm run lint
