@@ -1,5 +1,4 @@
-// !React.memo crashed this component, not sure why
-import { forwardRef, useMemo } from "react";
+import { forwardRef, memo, useMemo } from "react";
 import type { InputHTMLAttributes, ReactNode, Ref } from "react";
 import clsx from "clsx";
 
@@ -13,6 +12,11 @@ type Props = {
   container?: (props: { children: ReactNode }) => JSX.Element;
 } & InputHTMLAttributes<HTMLInputElement>;
 
+function DefaultContainer({ children }: { children: ReactNode }) {
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{children}</>;
+}
+
 function TextField(
   {
     className,
@@ -20,7 +24,7 @@ function TextField(
     color = "primary",
     helperText,
     errorMessage,
-    container: Container,
+    container: Container = DefaultContainer,
     ...props
   }: Props,
   ref: Ref<HTMLInputElement>,
@@ -61,7 +65,7 @@ function TextField(
             {icon}
           </div>
         )}
-        {Container ? <Container>{innerComponent}</Container> : innerComponent}
+        <Container>{innerComponent}</Container>
       </div>
       {errorMessage ? (
         <div className="text-xs text-red-500">{errorMessage}</div>
@@ -82,4 +86,4 @@ function TextField(
   );
 }
 
-export default forwardRef(TextField);
+export default memo(forwardRef(TextField));

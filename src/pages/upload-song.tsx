@@ -25,21 +25,22 @@ function Upload() {
   const queryClient = trpc.useContext();
   const artists = trpc.artists.getArtistNames.useQuery().data;
   const albums = trpc.albums.getAlbumNames.useQuery().data;
-  const mutation = trpc.songs.addSong.useMutation({
-    onSuccess: () => {
-      queryClient.artists.invalidate();
-    },
-  });
   const {
     register,
     handleSubmit,
     reset,
     setValue,
     getValues,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<AddSongForm>({
     resolver: zodResolver(AddSongSchema),
     mode: "onBlur",
+  });
+  const mutation = trpc.songs.addSong.useMutation({
+    onSuccess: () => {
+      queryClient.songs.invalidate();
+      reset();
+    },
   });
 
   const [isArtistFormOpen, setIsArtistFormOpen] = useState(false);
@@ -187,9 +188,11 @@ function Upload() {
               onFilesAdded={handleFilesAdded}
             />
             <Button
-              className="col-span-2 mx-auto w-fit px-16"
+              className="col-span-2 mx-auto w-48"
               type="submit"
               variant="positive"
+              disabled={!isValid}
+              loading={mutation.isLoading}
             >
               Add song
             </Button>
