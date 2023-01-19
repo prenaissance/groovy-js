@@ -22,7 +22,7 @@ function Navbar({ onExpand }: Props) {
         <Link className="px-2" href="/songs">
           Songs
         </Link>
-        <Link className="px-2" href="/upload">
+        <Link className="px-2" href="/upload-song">
           Upload
         </Link>
       </div>

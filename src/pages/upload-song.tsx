@@ -34,7 +34,7 @@ function Upload() {
     formState: { errors, isValid },
   } = useForm<AddSongForm>({
     resolver: zodResolver(AddSongSchema),
-    mode: "onBlur",
+    mode: "onChange",
   });
   const mutation = trpc.songs.addSong.useMutation({
     onSuccess: () => {

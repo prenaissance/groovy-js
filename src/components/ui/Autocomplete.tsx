@@ -39,7 +39,9 @@ function Autocomplete(
   const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
       const currentValue = e.target.value;
-      const option = uniformOptions.find((opt) => opt.value === currentValue);
+      const option = uniformOptions.find(
+        (opt) => opt.value === currentValue || opt.label === currentValue,
+      );
 
       setInputValue(currentValue);
       onInputChange?.(currentValue);

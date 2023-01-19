@@ -1,5 +1,8 @@
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useCallback, useState } from "react";
+
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
@@ -9,8 +12,9 @@ type Props = {
 
 function RootLayout({ children }: Props) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const handleExpand = () => setIsSidebarOpen(true);
-  const handleCollapse = () => setIsSidebarOpen(false);
+  const handleExpand = useCallback(() => setIsSidebarOpen(true), []);
+  const handleCollapse = useCallback(() => setIsSidebarOpen(false), []);
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar onExpand={handleExpand} />

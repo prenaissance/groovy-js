@@ -13,7 +13,7 @@ export const AddSongSchema = z
         .lte(new Date().getFullYear(), "The album cannot be from the future!"),
     ),
     genre: z.nativeEnum(Genre),
-    songUrl: z.string().optional(),
+    songUrl: z.string().url().optional().or(z.string().length(0)),
     songFile: z
       .string()
       .regex(/^data:audio\/([A-Za-z0-9]+);base64,/)

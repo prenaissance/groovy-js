@@ -46,7 +46,9 @@ function ChipsAutocomplete({
   const handleInputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (e) => {
       const { value } = e.target;
-      const option = availableOptions.find((opt) => opt.value === value);
+      const option = availableOptions.find(
+        (opt) => opt.value === value || opt.label === value,
+      );
       const label = option?.label ?? value;
       setInputValue(label);
       if (option) {
