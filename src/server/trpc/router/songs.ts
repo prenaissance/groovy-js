@@ -7,7 +7,7 @@ export const songsRouter = router({
   addSong: protectedProcedure
     .input(AddSongSchema)
     .mutation(async ({ input, ctx }) => {
-      const { title, artistId, albumId, year, songUrl, songFile, genre } =
+      const { title, artistId, albumId, songUrl, songFile, genre, year } =
         input;
       const { prisma, session } = ctx;
 
@@ -23,24 +23,24 @@ export const songsRouter = router({
       if (songExists) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "Song already exists",
+          message: "Song with the same name and artist already exists",
         });
       }
 
-      const album = await prisma.album.findUnique({
-        where: {
-          id: albumId,
-        },
-        include: {
-          artist: true,
-        },
-      });
-
-      if (!album || album.artistId !== artistId) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Album does not match artist",
+      if (albumId) {
+        const albumExists = await prisma.album.findFirst({
+          where: {
+            id: albumId,
+            artistId,
+          },
         });
+
+        if (!albumExists) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Album not found ",
+          });
+        }
       }
 
       const url = songFile
@@ -50,10 +50,10 @@ export const songsRouter = router({
       const song = await prisma.song.create({
         data: {
           title,
+          genre,
+          year,
           artistId,
           albumId,
-          year,
-          genre,
           songUrl: url,
           uploadedById: session.user.id,
         },

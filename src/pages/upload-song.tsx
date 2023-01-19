@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import Head from "next/head";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
 import { BiPlusCircle } from "react-icons/bi";
@@ -14,7 +15,6 @@ import ArtistForm from "@components/upload-song/ArtistForm";
 import AlbumForm from "@components/upload-song/AlbumForm";
 import { AddSongSchema } from "@shared/songs/schemas";
 import { fileToBase64 } from "@shared/utilities/files";
-import Head from "next/head";
 import Button from "@components/ui/Button";
 
 type AddSongForm = z.infer<typeof AddSongSchema>;
@@ -46,7 +46,7 @@ function Upload() {
   const [isArtistFormOpen, setIsArtistFormOpen] = useState(false);
   const [isAlbumFormOpen, setIsAlbumFormOpen] = useState(false);
   // will be used for a preview audio player
-  const [file, setFile] = React.useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const artistOptions = useMemo(
     () => (artists ?? []).map(({ name, id }) => ({ label: name, value: id })),

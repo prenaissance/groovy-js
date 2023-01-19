@@ -7,7 +7,10 @@ export const AddSongSchema = z
     artistId: z.string(),
     albumId: z.string().optional(),
     year: z.preprocess(
-      (value) => parseInt(z.string().parse(value), 10),
+      (value) =>
+        typeof value === "number"
+          ? value
+          : parseInt(z.string().parse(value), 10),
       z
         .number()
         .lte(new Date().getFullYear(), "The album cannot be from the future!"),
