@@ -119,15 +119,15 @@ model User {
 }
 
 model FavoriteSong {
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   userId    String
   songId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   song      Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
 
-  @@id([userId, songId])
   @@unique([userId, songId])
-  @@index([songId, userId])
+  @@index([songId, userId, createdAt(sort: Desc)])
 }
 
 model VerificationToken {
