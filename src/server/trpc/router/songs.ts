@@ -1,7 +1,9 @@
+import { Genre } from "@prisma/client";
 import { uploadBase64File, uploadUrlFile } from "@server/services/blob-storage";
 import { AddSongSchema } from "@shared/songs/schemas";
 import { TRPCError } from "@trpc/server";
-import { protectedProcedure, router } from "../trpc";
+import { z } from "zod";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const songsRouter = router({
   addSong: protectedProcedure
@@ -60,5 +62,38 @@ export const songsRouter = router({
       });
 
       return song;
+    }),
+
+  getSongs: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().int().positive().optional().default(10),
+        cursor: z.string().cuid().optional(),
+        genre: z.nativeEnum(Genre).optional(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { limit, cursor } = input;
+      const { prisma } = ctx;
+
+      const songs = await prisma.song.findMany({
+        take: limit,
+        skip: cursor ? 1 : 0,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          genre: input.genre,
+        },
+      });
+
+      const hasMore = songs.length === limit;
+      const nextCursor = hasMore ? songs.at(-1)!.id : null;
+
+      return {
+        songs,
+        nextCursor,
+      };
     }),
 });
