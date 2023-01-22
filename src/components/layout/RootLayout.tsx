@@ -1,7 +1,5 @@
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
 import type { ReactNode } from "react";
-import { useEffect, useCallback, useState } from "react";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
