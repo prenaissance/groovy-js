@@ -36,7 +36,7 @@ function Sidebar({ isOpen, onCollapse }: Props) {
               Favorites
             </div>
           </HoverLink>
-          <HoverLink onClick={onCollapse} href="/genres">
+          <HoverLink onClick={onCollapse} href="/playlists">
             <div className="flex items-center gap-2">
               <BsCollection size="24px" />
               Playlists
