@@ -165,7 +165,7 @@ function AlbumForm({ onClose }: Props) {
           type="submit"
           variant="primary"
         >
-          Add Artist
+          Add Album
         </Button>
       </div>
     </form>

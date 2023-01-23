@@ -5,8 +5,9 @@ import superjson from "superjson";
 import { appRouter } from "@server/trpc/router/_app";
 import { createContextInner } from "@server/trpc/context";
 import { Genre } from "@prisma/client";
+import { trpc } from "@utils/trpc";
 
-const DISPLAYED_GENRES = [Genre.Metal, Genre.Rock];
+const DISPLAYED_GENRES = [Genre.Metal, Genre.Rock] as const;
 
 export const getStaticProps: GetStaticProps = async () => {
   const ssg = createProxySSGHelpers({

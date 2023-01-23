@@ -48,6 +48,7 @@ export const albumsRouter = router({
       select: {
         id: true,
         title: true,
+        artistId: true,
       },
     });
 

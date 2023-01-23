@@ -23,14 +23,19 @@ const genres = Object.values(Genre);
 
 function Upload() {
   const queryClient = trpc.useContext();
-  const artists = trpc.artists.getArtistNames.useQuery().data;
-  const albums = trpc.albums.getAlbumNames.useQuery().data;
+  const { data: artists } = trpc.artists.getArtistNames.useQuery(undefined, {
+    initialData: [],
+  });
+  const { data: albums } = trpc.albums.getAlbumNames.useQuery(undefined, {
+    initialData: [],
+  });
   const {
     register,
     handleSubmit,
     reset,
     setValue,
     getValues,
+    watch,
     formState: { errors, isValid },
   } = useForm<AddSongForm>({
     resolver: zodResolver(AddSongSchema),
@@ -43,6 +48,7 @@ function Upload() {
     },
   });
 
+  const selectedArtistId = watch("artistId");
   const [isArtistFormOpen, setIsArtistFormOpen] = useState(false);
   const [isAlbumFormOpen, setIsAlbumFormOpen] = useState(false);
   // will be used for a preview audio player
@@ -54,8 +60,11 @@ function Upload() {
   );
 
   const albumOptions = useMemo(
-    () => (albums ?? []).map(({ title, id }) => ({ label: title, value: id })),
-    [albums],
+    () =>
+      (albums ?? [])
+        .filter((album) => album.artistId === selectedArtistId)
+        .map(({ title, id }) => ({ label: title, value: id })),
+    [albums, selectedArtistId],
   );
 
   const handleArtistFormClose = useCallback(() => {
