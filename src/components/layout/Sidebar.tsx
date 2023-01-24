@@ -26,7 +26,7 @@ function Sidebar({ isOpen, onCollapse }: Props) {
       >
         <div className="my-1 ml-2 flex flex-col justify-between gap-2 divide-x divide-primary-contrast bg-secondary text-primary-contrast">
           <div className="ml-[5px] flex items-center lg:mb-4">
-            <Hamburger onClick={onCollapse} />
+            <Hamburger aria-label="close sidebar" onClick={onCollapse} />
             <HoverLink onClick={onCollapse} href="/">
               Groovy
             </HoverLink>

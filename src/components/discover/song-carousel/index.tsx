@@ -64,10 +64,14 @@ function SongCarousel({ genre, className }: Props) {
         {genre ?? "Latest"}
       </h2>
       <div className="flex items-center">
-        <ShallowButton disabled={!page} onClick={handleChangePageLeft}>
+        <ShallowButton
+          aria-label="move list left"
+          disabled={!page}
+          onClick={handleChangePageLeft}
+        >
           <AiOutlineLeft size="24px" />
         </ShallowButton>
-        <div className="grid h-full flex-1 translate-x-0 grid-cols-3 gap-4 transition-transform duration-300 ease-in-out">
+        <div className="grid aspect-[3/1] h-full flex-1 translate-x-0 grid-cols-3 gap-4 transition-transform duration-300 ease-in-out">
           {loadedSongs
             .slice(page * SONGS_PER_PAGE, (page + 1) * SONGS_PER_PAGE)
             .map((song) => (
@@ -79,7 +83,11 @@ function SongCarousel({ genre, className }: Props) {
               />
             ))}
         </div>
-        <ShallowButton disabled={!hasNextPage} onClick={handleChangePageRight}>
+        <ShallowButton
+          aria-label="move list right"
+          disabled={!hasNextPage}
+          onClick={handleChangePageRight}
+        >
           <AiOutlineRight size="24px" />
         </ShallowButton>
       </div>
