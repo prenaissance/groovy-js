@@ -16,6 +16,7 @@ import AlbumForm from "@components/upload-song/AlbumForm";
 import { AddSongSchema } from "@shared/songs/schemas";
 import { fileToBase64 } from "@shared/utilities/files";
 import Button from "@components/ui/Button";
+import ShallowButton from "@components/ui/ShallowButton";
 
 type AddSongForm = z.infer<typeof AddSongSchema>;
 
@@ -44,7 +45,11 @@ function Upload() {
   const mutation = trpc.songs.addSong.useMutation({
     onSuccess: () => {
       queryClient.songs.invalidate();
-      reset();
+      reset({
+        artistId: getValues("artistId"),
+        albumId: getValues("albumId"),
+        songFile: getValues("songFile"),
+      });
     },
   });
 
@@ -134,13 +139,13 @@ function Upload() {
                   onSelectedChange={getSelectValueHandler("artistId")}
                   errorMessage={errors.artistId?.message}
                 />
-                <button
+                <ShallowButton
                   type="button"
-                  className="hover:bg-secondary-dark/20 align-center flex flex-row justify-center self-start p-1 text-secondary-contrast"
+                  className="align-center flex justify-center self-start p-1 text-secondary-contrast"
                   onClick={handleArtistFormOpen}
                 >
                   <BiPlusCircle size="24px" />
-                </button>
+                </ShallowButton>
               </div>
             </label>
             <label>
@@ -161,13 +166,13 @@ function Upload() {
                   onSelectedChange={getSelectValueHandler("albumId")}
                   errorMessage={errors.albumId?.message}
                 />
-                <button
+                <ShallowButton
                   type="button"
-                  className="hover:bg-secondary-dark/20 flex flex-row items-center justify-start self-start p-1 text-secondary-contrast"
+                  className="flex items-center justify-center self-start p-1 text-secondary-contrast"
                   onClick={handleAlbumFormOpen}
                 >
                   <BiPlusCircle size="24px" />
-                </button>
+                </ShallowButton>
               </div>
             </label>
             <label>
