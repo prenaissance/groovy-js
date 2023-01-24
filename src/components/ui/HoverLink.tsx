@@ -7,7 +7,7 @@ function HoverLink(props: Props) {
   return (
     <Link
       {...props}
-      className="px-2 font-semibold text-primary-contrast transition-[filter] duration-75 ease-out hover:brightness-75"
+      className="rounded-sm px-2 font-semibold text-primary-contrast outline-2 outline-blue-500 transition-[filter] duration-75 ease-out hover:brightness-75 focus:outline focus:brightness-75 focus:transition-none"
     />
   );
 }

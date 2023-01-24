@@ -68,12 +68,12 @@ export const songsRouter = router({
     .input(
       z.object({
         limit: z.number().int().positive().optional().default(10),
-        cursor: z.string().cuid().optional(),
+        cursor: z.string().cuid().nullish(),
         genre: z.nativeEnum(Genre).optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
-      const { limit, cursor } = input;
+      const { limit, cursor, genre } = input;
       const { prisma } = ctx;
 
       const songs = await prisma.song.findMany({
@@ -83,8 +83,22 @@ export const songsRouter = router({
         orderBy: {
           createdAt: "desc",
         },
-        where: {
-          genre: input.genre,
+        where: genre && {
+          genre,
+        },
+        include: {
+          artist: {
+            select: {
+              name: true,
+              imageUrl: true,
+            },
+          },
+          album: {
+            select: {
+              title: true,
+              imageUrl: true,
+            },
+          },
         },
       });
 

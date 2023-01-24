@@ -14,5 +14,8 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["groovyjs.blob.core.windows.net"],
+  },
 };
 export default config;

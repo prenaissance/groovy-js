@@ -32,10 +32,15 @@ module.exports = {
           "0%": { opacity: 1, transform: "translateY(0)" },
           "100%": { opacity: 0, transform: "translateY(min(100px, 10vw))" },
         },
+        "move-text": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "show-up": "show-up 0.3s ease-out",
         "hide-down": "hide-down 0.3s ease-in",
+        "move-text": "move-text 10s linear infinite",
       },
       backdropBlur: {
         xs: "2px",

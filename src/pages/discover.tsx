@@ -5,9 +5,9 @@ import superjson from "superjson";
 import { appRouter } from "@server/trpc/router/_app";
 import { createContextInner } from "@server/trpc/context";
 import { Genre } from "@prisma/client";
-import { trpc } from "@utils/trpc";
+import SongCarousel from "@components/discover/song-carousel";
 
-const DISPLAYED_GENRES = [Genre.Metal, Genre.Rock] as const;
+const DISPLAYED_GENRES = [Genre.Metal, Genre.Rock, Genre.Electronic] as const;
 
 export const getStaticProps: GetStaticProps = async () => {
   const ssg = createProxySSGHelpers({
@@ -29,12 +29,19 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       trpcState: ssg.dehydrate(),
     },
-    revalidate: 1,
+    revalidate: 30,
   };
 };
 
 function Discover({}: InferGetStaticPropsType<typeof getStaticProps>) {
-  return <div>discover</div>;
+  return (
+    <div className="absolute left-1/2 w-full max-w-screen-lg -translate-x-1/2">
+      <SongCarousel className="w-full" />
+      {DISPLAYED_GENRES.map((genre) => (
+        <SongCarousel className="w-full" key={genre} genre={genre} />
+      ))}
+    </div>
+  );
 }
 
 export default Discover;
