@@ -10,16 +10,17 @@ type Props = {
   onCollapse: () => void;
 };
 
+// TODO: Make a proper modal, there are problems with focusing other elements while open
 function Sidebar({ isOpen, onCollapse }: Props) {
   return (
     <>
       <div
         role="toolbar"
         className={clsx(
-          "fixed inset-y-0 left-0 z-[50] flex w-64 flex-col overflow-x-hidden border-r border-accent-light bg-secondary transition-transform duration-75 ease-out",
+          "fixed inset-y-0 left-0 z-[50] flex w-64 flex-col overflow-x-hidden border-r border-accent-light bg-secondary pr-2 transition-transform duration-75 ease-out",
           {
-            "translate-x-0": isOpen,
-            "-translate-x-64": !isOpen,
+            "visible translate-x-0": isOpen,
+            "invisible -translate-x-64": !isOpen,
           },
         )}
       >
