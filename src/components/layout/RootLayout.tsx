@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import AudioControl from "./AudioControl";
 
 type Props = {
   children: ReactNode;
@@ -18,6 +19,7 @@ function RootLayout({ children }: Props) {
       <Navbar onExpand={handleExpand} />
       <Sidebar isOpen={isSidebarOpen} onCollapse={handleCollapse} />
       <main className="relative flex flex-1 flex-col">{children}</main>
+      <AudioControl />
     </div>
   );
 }
