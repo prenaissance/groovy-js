@@ -93,7 +93,7 @@ function AlbumForm({ onClose }: Props) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex max-h-[80vh] max-w-md flex-col gap-4 overflow-y-auto rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
+      className="flex max-h-[80vh] w-96 flex-col gap-4 overflow-y-auto rounded-md border border-accent-light p-4 text-primary-contrast [scrollbar-width:thin]"
     >
       <NotificationBar variant="error" message={errorMessage} />
       <label className="flex flex-col gap-2">

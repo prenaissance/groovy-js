@@ -49,6 +49,7 @@ function Discover({}: InferGetStaticPropsType<typeof getStaticProps>) {
         {DISPLAYED_GENRES.map((genre) => (
           <SongCarousel className="w-full" key={genre} genre={genre} />
         ))}
+        <div className="invisible h-20" />
       </div>
     </>
   );
