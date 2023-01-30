@@ -32,7 +32,7 @@ type PlaylistActions = {
 const usePlayerStore = create<PlaylistState & PlaylistActions>()(
   persist(
     (set) => ({
-      volume: 50,
+      volume: 0.5,
       currentTime: 0,
       setVolume: (volume) => set({ volume }),
       setPlaylist: (playlist) => set({ playlist }),

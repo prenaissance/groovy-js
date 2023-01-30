@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { shallow } from "zustand/shallow";
 import Image from "next/image";
 import {
@@ -16,16 +16,18 @@ import SliderInput from "@components/ui/SliderInput";
 import usePlayerStore from "@stores/usePlayerStore";
 import { isClient } from "@shared/utilities/isomorphism";
 import AudioControlContainer from "./AudioControlContainer";
+import VolumeRocker from "./VolumeRocker";
 
 const audio = (isClient() ? new Audio() : null)!;
 
 function AudioControlClient() {
-  const { song, volume, setCurrentTime } = usePlayerStore(
+  const { song, volume, setCurrentTime, setVolume } = usePlayerStore(
     (state) => ({
       song: state.currentSong,
       volume: state.volume,
       currentTime: state.currentTime,
       setCurrentTime: state.setCurrentTime,
+      setVolume: state.setVolume,
     }),
     shallow,
   );
@@ -38,6 +40,10 @@ function AudioControlClient() {
       audio.currentTime = usePlayerStore.getState().currentTime;
     }
   }, [song]);
+
+  useEffect(() => {
+    audio.volume = volume;
+  }, [volume]);
 
   useEffect(() => {
     let interval: number | null = null;
@@ -59,16 +65,6 @@ function AudioControlClient() {
       }
     };
   }, [isPlaying, setCurrentTime]);
-
-  const VolumeIndicator = useCallback(() => {
-    if (volume === 0) {
-      return <BsVolumeMute size="32px" />;
-    }
-    if (volume < 0.5) {
-      return <BsVolumeDown size="32px" />;
-    }
-    return <BsVolumeUp size="32px" />;
-  }, [volume]);
 
   const PlayOrPauseButton = useCallback(
     () => (
@@ -122,12 +118,7 @@ function AudioControlClient() {
           <BsSkipEndFill size="48px" />
         </ShallowButton>
       </div>
-      <div className="volume mr-2 flex items-center justify-self-end">
-        <ShallowButton>
-          <VolumeIndicator />
-        </ShallowButton>
-        <SliderInput className="w-32" />
-      </div>
+      <VolumeRocker />
     </AudioControlContainer>
   );
 }
