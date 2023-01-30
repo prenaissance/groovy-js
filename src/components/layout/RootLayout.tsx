@@ -18,7 +18,7 @@ function RootLayout({ children }: Props) {
     <div className="flex min-h-screen flex-col">
       <Navbar onExpand={handleExpand} />
       <Sidebar isOpen={isSidebarOpen} onCollapse={handleCollapse} />
-      <main className="relative flex flex-1 flex-col">{children}</main>
+      <main className="relative mb-20 flex flex-1 flex-col">{children}</main>
       <AudioControl />
     </div>
   );
