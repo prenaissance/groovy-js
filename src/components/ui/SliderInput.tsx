@@ -86,7 +86,7 @@ function SliderInput({
     <div
       className={clsx(
         className,
-        "relative h-1 w-16 cursor-pointer rounded-full bg-primary-dark",
+        "after:w-[calc(100% - var(--percentage))] relative h-1 w-16 cursor-pointer rounded-full bg-primary-dark before:absolute before:left-0 before:top-0 before:h-full before:w-[var(--percentage)] before:rounded-full before:bg-accent-light before:content-[''] after:absolute after:right-0 after:top-0 after:h-full after:rounded-full after:bg-primary-contrast after:content-['']",
       )}
       style={{ "--percentage": `${percentage.current}%` } as any}
       onClick={handleSliderClick}
@@ -104,7 +104,6 @@ function SliderInput({
         step={(max - min) / 20}
         className="sr-only"
       />
-      <div className="width-[calc(var(--percentage) - 1px)] absolute left-0 z-[1] h-full bg-white" />
       {!noThumb && (
         <div
           className="pointer-events-none absolute -top-[66%] left-[var(--percentage)] aspect-square h-[300%] rounded-full bg-accent-dark outline outline-1 outline-accent-light group-hover:visible"
