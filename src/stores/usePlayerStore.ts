@@ -17,6 +17,7 @@ interface PlaylistState {
       })
     | void;
   volume: number;
+  currentTime: number;
 }
 
 type PlaylistActions = {
@@ -25,17 +26,20 @@ type PlaylistActions = {
   moveToNextSong: () => void;
   moveToPreviousSong: () => void;
   setVolume: (volume: number) => void;
+  setCurrentTime: (time: number) => void;
 };
 
 const usePlayerStore = create<PlaylistState & PlaylistActions>()(
   persist(
     (set) => ({
       volume: 50,
+      currentTime: 0,
       setVolume: (volume) => set({ volume }),
       setPlaylist: (playlist) => set({ playlist }),
-      setCurrentSong: (song) => set({ currentSong: song }),
+      setCurrentSong: (song) => set({ currentSong: song, currentTime: 0 }),
       moveToNextSong: () => {},
       moveToPreviousSong: () => {},
+      setCurrentTime: (time) => set({ currentTime: time }),
     }),
     {
       name: "playlist",
