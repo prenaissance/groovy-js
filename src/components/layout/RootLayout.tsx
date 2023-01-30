@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import AudioControl from "./AudioControl";
+import AudioControl from "./audio-control";
 
 type Props = {
   children: ReactNode;

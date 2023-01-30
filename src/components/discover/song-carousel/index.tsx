@@ -3,6 +3,8 @@ import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import type { Genre, Song } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import ShallowButton from "@components/ui/ShallowButton";
+import usePlayerStore from "@stores/usePlayerStore";
+import type { ArrayElementType } from "@custom-types/ArrayElementType";
 import SongCard from "./SongCard";
 
 type Props = {
@@ -22,6 +24,7 @@ function SongCarousel({ genre, className }: Props) {
   );
   const { data, hasNextPage, fetchNextPage } = songsQuery;
   const [page, setPage] = useState(0);
+  const { setCurrentSong } = usePlayerStore.getState();
 
   const loadedSongs = useMemo(
     () =>
@@ -51,11 +54,12 @@ function SongCarousel({ genre, className }: Props) {
   }, [fetchNextPage, hasNextPage, loadedSongs.length, page]);
 
   const getSelectSongHandler = useCallback(
-    (song: Song) => () => {
+    (song: ArrayElementType<typeof loadedSongs>) => () => {
       // eslint-disable-next-line no-console
-      console.log(`${song.title} selected`);
+      console.log("select song", song);
+      setCurrentSong(song);
     },
-    [],
+    [setCurrentSong],
   );
 
   return (

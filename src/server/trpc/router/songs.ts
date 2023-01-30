@@ -89,6 +89,7 @@ export const songsRouter = router({
         include: {
           artist: {
             select: {
+              id: true,
               name: true,
               imageUrl: true,
             },
