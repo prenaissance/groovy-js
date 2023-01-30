@@ -12,7 +12,7 @@ const minmax = (min: number, max: number, value: number) => {
   return value;
 };
 
-type Props = InputHTMLAttributes<HTMLInputElement> & {
+type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
   onChange?: (value: number) => void;
   min?: number;
   max?: number;
