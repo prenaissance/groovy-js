@@ -28,7 +28,7 @@ function SliderInput({
   noThumb = false,
   ...rest
 }: Props) {
-  const props = { min, max, defaultValue, noThumb, ...rest };
+  const props = { min, max, defaultValue, ...rest };
   const { className, onChange } = props;
 
   const value = useRef(defaultValue);

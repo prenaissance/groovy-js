@@ -32,7 +32,7 @@
       "error",
       "ignorePackages",
       {
-        "js": "never",
+        "js": "allowJs",
         "jsx": "never",
         "ts": "never",
         "tsx": "never"

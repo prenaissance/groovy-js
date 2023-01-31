@@ -1,3 +1,5 @@
+import "core-js/proposals/relative-indexing-method.js";
+
 // @ts-check
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
