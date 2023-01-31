@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import type { Genre, Song } from "@prisma/client";
 import { trpc } from "@utils/trpc";
@@ -37,26 +37,32 @@ function SongCarousel({ genre, className }: Props) {
     [data?.pages],
   );
 
+  const canMoveToNextPage =
+    hasNextPage || page + 1 < loadedSongs.length / SONGS_PER_PAGE;
+
+  useEffect(() => {
+    // optimistically fetch next page if there are 3 or less songs left
+    if (!hasNextPage) return;
+
+    const lastSongIndex = (page + 1) * SONGS_PER_PAGE;
+    if (lastSongIndex + SONGS_PER_PAGE >= loadedSongs.length) {
+      fetchNextPage();
+    }
+  }, [page, fetchNextPage, loadedSongs.length, hasNextPage]);
+
   const handleChangePageLeft = useCallback(
     () => setPage((lastPage) => lastPage - 1),
     [],
   );
 
   const handleChangePageRight = useCallback(() => {
-    if (!hasNextPage) return;
+    if (!canMoveToNextPage) return;
 
     setPage((lastPage) => lastPage + 1);
-    // optimistically fetch next page if there are 3 or less songs left
-    const lastSongIndex = (page + 1) * SONGS_PER_PAGE;
-    if (lastSongIndex + SONGS_PER_PAGE >= loadedSongs.length) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, hasNextPage, loadedSongs.length, page]);
+  }, [canMoveToNextPage]);
 
   const getSelectSongHandler = useCallback(
     (song: ArrayElementType<typeof loadedSongs>) => () => {
-      // eslint-disable-next-line no-console
-      console.log("select song", song);
       setCurrentSong(song);
     },
     [setCurrentSong],
@@ -73,7 +79,7 @@ function SongCarousel({ genre, className }: Props) {
           disabled={!page}
           onClick={handleChangePageLeft}
         >
-          <AiOutlineLeft size="24px" />
+          <AiOutlineLeft size="32px" />
         </ShallowButton>
         <div className="grid aspect-[3/1] h-full flex-1 translate-x-0 grid-cols-3 gap-4 transition-transform duration-300 ease-in-out">
           {loadedSongs
@@ -89,10 +95,10 @@ function SongCarousel({ genre, className }: Props) {
         </div>
         <ShallowButton
           aria-label="move list right"
-          disabled={!hasNextPage}
+          disabled={!canMoveToNextPage}
           onClick={handleChangePageRight}
         >
-          <AiOutlineRight size="24px" />
+          <AiOutlineRight size="32px" />
         </ShallowButton>
       </div>
     </section>
