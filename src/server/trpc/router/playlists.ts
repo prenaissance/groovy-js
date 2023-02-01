@@ -25,18 +25,26 @@ export const playlistsRouter = router({
 
   getPlaylist: protectedProcedure
     .input(
-      z.object({
-        id: z.string().cuid(),
-      }),
+      z
+        .object({
+          id: z.string().cuid().optional(),
+          title: z.string().optional(),
+        })
+        .refine((data) => data.id || data.title, {
+          message: "Either id or title must be provided",
+          path: ["id", "title"],
+        }),
     )
     .query(async ({ input, ctx }) => {
-      const { id } = input;
+      const { id, title } = input;
       const { prisma, session } = ctx;
 
+      const whereQuery = id
+        ? { id }
+        : { userId_title: { userId: session.user.id, title: title! } };
+
       const playlist = await prisma.playlist.findUnique({
-        where: {
-          id,
-        },
+        where: whereQuery,
         include: {
           playlistSongs: {
             include: {
