@@ -126,7 +126,7 @@ model PlaylistSong {
   playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
   playlistId String
 
-  @@unique([songId])
+  @@unique([playlistId, songId])
   @@index([songId, createdAt(sort: Desc)])
 }
 

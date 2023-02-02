@@ -2,7 +2,7 @@ import { router } from "../trpc";
 import { albumsRouter } from "./albums";
 import { artistsRouter } from "./artists";
 import { authRouter } from "./auth";
-import { playlistsRouter } from "./playlists";
+import { playlistsRouter } from "./playlists/playlists";
 import { songsRouter } from "./songs";
 
 export const appRouter = router({
