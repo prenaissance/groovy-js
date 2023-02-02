@@ -30,6 +30,23 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  events: {
+    signIn: async ({ user }) => {
+      await prisma.playlist.upsert({
+        where: {
+          userId_title: {
+            userId: user.id,
+            title: "Favorites",
+          },
+        },
+        update: {},
+        create: {
+          title: "Favorites",
+          userId: user.id,
+        },
+      });
+    },
+  },
 };
 
 export default NextAuth(authOptions);
