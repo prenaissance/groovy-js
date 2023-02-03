@@ -21,7 +21,7 @@ import VolumeRocker from "./VolumeRocker";
 const audio = (isClient() ? new Audio() : null)!;
 
 function AudioControlClient() {
-  const { song, volume, setCurrentTime, setVolume } = usePlayerStore(
+  const { song, volume, setCurrentTime } = usePlayerStore(
     (state) => ({
       song: state.currentSong,
       volume: state.volume,

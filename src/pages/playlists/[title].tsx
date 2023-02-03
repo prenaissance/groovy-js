@@ -32,7 +32,7 @@ export const getServerSideProps = async (
     transformer: superjson,
   });
 
-  await ssg.playlists.getPlaylist.prefetch({ title });
+  await ssg.playlists.getPlaylist.prefetch({ playlistTitle: title });
 
   return {
     props: {
@@ -45,7 +45,9 @@ export const getServerSideProps = async (
 function PlaylistPage({
   title,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const playlistQuery = trpc.playlists.getPlaylist.useQuery({ title });
+  const playlistQuery = trpc.playlists.getPlaylist.useQuery({
+    playlistTitle: title,
+  });
   return (
     <>
       <div>PlaylistPage</div>

@@ -143,7 +143,7 @@ export const playlistsRouter = router({
   addSongToPlaylist: protectedProcedure
     .input(PlaylistSongInputSchema)
     .mutation(async ({ input, ctx }) => {
-      const { playlistId, playlistTitle, songId } = input;
+      const { songId } = input;
       const { prisma, session } = ctx;
 
       const songExists = await prisma.song.findUnique({
@@ -163,14 +163,16 @@ export const playlistsRouter = router({
         where: getPlaylistWhereQuery({ ...input, session }),
       });
 
-      if (ensureOwnPlaylist(playlist, session)) {
-        prisma.playlistSong.create({
-          data: {
-            playlistId: playlist.id,
-            songId,
-          },
-        });
+      if (!ensureOwnPlaylist(playlist, session)) {
+        throw 0;
       }
+
+      prisma.playlistSong.create({
+        data: {
+          playlistId: playlist.id,
+          songId,
+        },
+      });
 
       return playlist;
     }),
