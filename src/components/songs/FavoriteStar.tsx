@@ -1,7 +1,7 @@
 import ShallowButton from "@components/ui/ShallowButton";
 import { trpc } from "@utils/trpc";
 import { useSession } from "next-auth/react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { BsStar, BsStarFill } from "react-icons/bs";
 
 type Props = {
@@ -9,11 +9,21 @@ type Props = {
 };
 
 function FavoriteStar({ songId }: Props) {
+  const [isFavorite, setIsFavorite] = useState(false);
   const session = useSession();
   const queryClient = trpc.useContext();
-  const favoritePlaylistQuery = trpc.playlists.getPlaylist.useQuery({
-    playlistTitle: "Favorites",
-  });
+
+  trpc.playlists.getPlaylist.useQuery(
+    {
+      playlistTitle: "Favorites",
+    },
+    {
+      enabled: session.status === "authenticated",
+      onSuccess: (data) => {
+        setIsFavorite(!!data?.songs?.some((song) => song.id === songId));
+      },
+    },
+  );
   const mutateAdd = trpc.playlists.addSongToPlaylist.useMutation({
     onSettled: () => {
       queryClient.playlists.invalidate();
@@ -25,13 +35,8 @@ function FavoriteStar({ songId }: Props) {
     },
   });
 
-  const isFavorite = useMemo(
-    () =>
-      !!favoritePlaylistQuery.data?.songs?.some((song) => song.id === songId),
-    [favoritePlaylistQuery.data?.songs, songId],
-  );
-
   const handleAction = useCallback(() => {
+    setIsFavorite((isFavorite) => !isFavorite);
     if (isFavorite) {
       mutateRemove.mutate({
         playlistTitle: "Favorites",

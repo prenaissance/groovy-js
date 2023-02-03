@@ -30,7 +30,7 @@ function VolumeRocker() {
   );
 
   return (
-    <div className="volume mr-2 flex items-center justify-self-end">
+    <div className="volume mr-2 flex items-center gap-2 justify-self-end">
       {!!song && <FavoriteStar songId={song.id} />}
       <VolumeIndicator />
       <SliderInput

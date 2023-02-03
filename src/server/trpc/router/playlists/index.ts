@@ -118,7 +118,7 @@ export const playlistsRouter = router({
       return playlist;
     }),
 
-  createIfExistsPlaylist: protectedProcedure
+  createIfNotExistsPlaylist: protectedProcedure
     .input(z.string().min(1).max(50))
     .mutation(async ({ input, ctx }) => {
       const { prisma, session } = ctx;
@@ -167,7 +167,7 @@ export const playlistsRouter = router({
         throw 0;
       }
 
-      prisma.playlistSong.create({
+      await prisma.playlistSong.create({
         data: {
           playlistId: playlist.id,
           songId,
@@ -191,7 +191,7 @@ export const playlistsRouter = router({
         throw 0;
       }
 
-      prisma.playlistSong.delete({
+      await prisma.playlistSong.delete({
         where: {
           playlistId_songId: {
             playlistId: playlist.id,
