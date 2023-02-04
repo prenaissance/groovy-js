@@ -1,3 +1,4 @@
+import { SongDto } from "@shared/songs/types";
 import { TRPCError } from "@trpc/server";
 import { Session } from "next-auth";
 import { z } from "zod";
@@ -58,6 +59,7 @@ export const playlistsRouter = router({
                   },
                   album: {
                     select: {
+                      id: true,
                       title: true,
                       imageUrl: true,
                     },
@@ -76,8 +78,21 @@ export const playlistsRouter = router({
         throw 0;
       }
 
-      const flattenedPlaylist = playlist.playlistSongs.map(
-        (playlistSong) => playlistSong.song,
+      const flattenedPlaylist: SongDto[] = playlist.playlistSongs.map(
+        ({ song }) => ({
+          ...song,
+          imageUrl: song.album?.imageUrl || song.artist.imageUrl,
+          artist: {
+            id: song.artist.id,
+            name: song.artist.name,
+          },
+          album: song.album
+            ? {
+                id: song.album.id,
+                title: song.album.title,
+              }
+            : null,
+        }),
       );
 
       return {

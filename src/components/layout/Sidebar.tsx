@@ -31,7 +31,7 @@ function Sidebar({ isOpen, onCollapse }: Props) {
               Groovy
             </HoverLink>
           </div>
-          <HoverLink onClick={onCollapse} href="/favorites">
+          <HoverLink onClick={onCollapse} href="/playlists/Favorites">
             <div className="flex items-center gap-2">
               <AiFillStar size="24px" />
               Favorites
