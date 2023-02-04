@@ -1,3 +1,13 @@
-import type { RouterOutputs } from "../../utils/trpc";
+import { Song } from "@prisma/client";
 
-export type SongDto = RouterOutputs["songs"]["getSongs"]["songs"][number];
+export type SongDto = Song & {
+  imageUrl: string;
+  artist: {
+    id: string;
+    name: string;
+  };
+  album: {
+    id: string;
+    title: string;
+  } | null;
+};

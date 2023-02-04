@@ -1,6 +1,7 @@
 import { Genre } from "@prisma/client";
 import { uploadBase64File, uploadUrlFile } from "@server/services/blob-storage";
 import { AddSongSchema } from "@shared/songs/schemas";
+import { SongDto } from "@shared/songs/types";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
@@ -96,6 +97,7 @@ export const songsRouter = router({
           },
           album: {
             select: {
+              id: true,
               title: true,
               imageUrl: true,
             },
@@ -103,11 +105,26 @@ export const songsRouter = router({
         },
       });
 
+      const mappedSongs: SongDto[] = songs.map((song) => ({
+        ...song,
+        artist: {
+          id: song.artist.id,
+          name: song.artist.name,
+        },
+        album: song.album
+          ? {
+              id: song.album.id,
+              title: song.album.title,
+            }
+          : null,
+        imageUrl: song.album?.imageUrl || song.artist.imageUrl,
+      }));
+
       const hasMore = songs.length === limit;
       const nextCursor = hasMore ? songs.at(-1)!.id : null;
 
       return {
-        songs,
+        songs: mappedSongs,
         nextCursor,
       };
     }),

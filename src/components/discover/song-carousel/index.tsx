@@ -27,13 +27,7 @@ function SongCarousel({ genre, className }: Props) {
   const { setCurrentSong } = usePlayerStore.getState();
 
   const loadedSongs = useMemo(
-    () =>
-      (data?.pages ?? [])
-        .flatMap((p) => p.songs)
-        .map((song) => ({
-          ...song,
-          imageUrl: song.album?.imageUrl ?? song.artist.imageUrl,
-        })),
+    () => (data?.pages ?? []).flatMap((p) => p.songs),
     [data?.pages],
   );
 
