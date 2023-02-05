@@ -1,3 +1,6 @@
+// eslint-disable-next-line
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -44,6 +47,10 @@ module.exports = {
       },
       backdropBlur: {
         xs: "2px",
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
+        mono: ["var(--font-roboto-mono)", ...defaultTheme.fontFamily.mono],
       },
     },
   },

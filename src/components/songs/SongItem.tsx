@@ -56,7 +56,7 @@ function SongItem({ song, className, listIndex, ...rest }: Props) {
           <p className="text-sm font-light text-gray-300">{song.artist.name}</p>
         </div>
       </td>
-      <td className="align-middle font-mono text-lg text-gray-300">
+      <td className="align-middle font-sans text-lg text-gray-300">
         {song?.album?.title}
       </td>
       <FavoriteStar
