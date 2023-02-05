@@ -1,15 +1,20 @@
+import { forwardRef, memo } from "react";
+import type { ButtonHTMLAttributes, Ref } from "react";
 import clsx from "clsx";
-import type { ButtonHTMLAttributes } from "react";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement>;
 
-function ShallowButton({ className, disabled, ...rest }: Props) {
+function ShallowButton(
+  { className, disabled, ...rest }: Props,
+  ref: Ref<HTMLButtonElement>,
+) {
   const props = {
     ...rest,
     disabled,
   };
   return (
     <button
+      ref={ref}
       className={clsx(
         "rounded-sm border-0 bg-transparent outline-blue-500 transition-[filter] duration-75 ease-in focus:outline focus:outline-2 active:outline active:outline-2",
         {
@@ -25,4 +30,4 @@ function ShallowButton({ className, disabled, ...rest }: Props) {
   );
 }
 
-export default ShallowButton;
+export default memo(forwardRef(ShallowButton));

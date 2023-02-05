@@ -7,7 +7,8 @@ import { BsPlayFill } from "react-icons/bs";
 import type { SongDto } from "@shared/songs/types";
 import usePlayerStore from "@stores/usePlayerStore";
 import ShallowButton from "@components/ui/ShallowButton";
-import FavoriteStar from "./FavoriteStar";
+import FavoriteStar from "../FavoriteStar";
+import SongOptions from "./SongOptions";
 
 type Props = {
   song: SongDto;
@@ -59,11 +60,10 @@ function SongItem({ song, className, listIndex, ...rest }: Props) {
       <td className="align-middle font-sans text-lg text-gray-300">
         {song?.album?.title}
       </td>
-      <FavoriteStar
-        className="invisible absolute right-4 top-1/2 -translate-y-1/2 group-focus-within:visible group-hover:visible"
-        songId={song.id}
-        size="24px"
-      />
+      <div className="invisible absolute right-4 top-1/2 flex -translate-y-1/2 items-center space-x-2 group-focus-within:visible group-hover:visible">
+        <FavoriteStar songId={song.id} size="24px" />
+        <SongOptions songId={song.id} size="32px" position="bottom-left" />
+      </div>
     </tr>
   );
 }

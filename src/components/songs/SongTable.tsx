@@ -2,7 +2,7 @@ import type { HTMLAttributes } from "react";
 import clsx from "clsx";
 
 import type { SongDto } from "@shared/songs/types";
-import SongItem from "./SongItem";
+import SongItem from "./song-item";
 
 type Props = {
   songs: SongDto[];
