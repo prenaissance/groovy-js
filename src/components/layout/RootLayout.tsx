@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import clsx from "clsx";
 import { Inter, Roboto_Mono } from "@next/font/google";
 import Navbar from "./Navbar";
-import Sidebar from "./Sidebar";
+import Sidebar from "./sidebar";
 import AudioControl from "./audio-control";
 
 const inter = Inter({

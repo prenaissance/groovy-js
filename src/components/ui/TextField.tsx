@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from "react";
+import { forwardRef, memo, useId, useMemo } from "react";
 import type { InputHTMLAttributes, ReactNode, Ref } from "react";
 import clsx from "clsx";
 
@@ -29,6 +29,7 @@ function TextField(
   }: Props,
   ref: Ref<HTMLInputElement>,
 ) {
+  const describedById = useId();
   const innerComponent = useMemo(
     () => (
       <div className="relative min-w-[8rem] flex-1 after:absolute after:left-1/2 after:bottom-0 after:h-[1px] after:w-0 after:-translate-x-1/2 after:bg-blue-500 after:content-[''] focus-within:after:w-full after:motion-safe:transition-all">
@@ -36,10 +37,13 @@ function TextField(
           ref={ref}
           className="w-full bg-transparent focus:outline-none"
           {...props}
+          aria-describedby={
+            !!helperText || !!errorMessage ? describedById : undefined
+          }
         />
       </div>
     ),
-    [props, ref],
+    [props, ref, describedById, helperText, errorMessage],
   );
 
   return (
@@ -68,10 +72,13 @@ function TextField(
         <Container>{innerComponent}</Container>
       </div>
       {errorMessage ? (
-        <div className="text-xs text-red-500">{errorMessage}</div>
+        <div id={describedById} className="text-xs text-red-500">
+          {errorMessage}
+        </div>
       ) : (
         helperText && (
           <div
+            id={describedById}
             className={clsx("text-xs", {
               "text-primary-contrast": color === "primary",
               "text-secondary-contrast": color === "secondary",

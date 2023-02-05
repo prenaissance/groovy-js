@@ -1,16 +1,15 @@
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import Head from "next/head";
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from "next";
 import superjson from "superjson";
 
+import { trpc } from "@utils/trpc";
 import { getServerAuthSession } from "@server/common/get-server-auth-session";
 import { createContextInner } from "@server/trpc/context";
 import { appRouter } from "@server/trpc/router/_app";
-import { trpc } from "@utils/trpc";
-import Head from "next/head";
-import SongItem from "@components/songs/SongItem";
 import SongTable from "@components/songs/SongTable";
 
 export const getServerSideProps = async (

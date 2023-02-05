@@ -8,6 +8,7 @@ type Props = {
   disabled?: boolean;
   outlined?: boolean;
   loading?: boolean;
+  noGutters?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 type SubButtonProps = Omit<Props, "outlined">;
@@ -23,6 +24,7 @@ function FilledButton({
   className,
   variant,
   disabled,
+  noGutters,
   ...props
 }: SubButtonProps) {
   return (
@@ -31,7 +33,8 @@ function FilledButton({
       disabled={disabled}
       className={clsx(
         className,
-        "min-h-[1rem] rounded-md border px-4 py-2 text-sm font-semibold outline-2 transition-colors",
+        "min-h-[1rem] rounded-md border text-sm font-semibold outline-2 transition-colors",
+        !noGutters && "px-4 py-2",
         {
           "border-gray-400 bg-gray-400 text-gray-500": disabled,
           "focus:outline focus:outline-blue-500 active:outline active:outline-blue-500":
@@ -57,6 +60,7 @@ function OutlinedButton({
   className,
   disabled,
   variant,
+  noGutters,
   ...props
 }: SubButtonProps) {
   return (
@@ -65,7 +69,8 @@ function OutlinedButton({
       disabled={disabled}
       className={clsx(
         className,
-        "min-h-[1rem] rounded-md border bg-white/[0.02] px-4 py-2 text-sm font-semibold outline-2 transition duration-150 focus:outline focus:outline-blue-500 active:outline active:outline-blue-500",
+        "min-h-[1rem] rounded-md border bg-white/[0.02] text-sm font-semibold outline-2 transition duration-150 focus:outline focus:outline-blue-500 active:outline active:outline-blue-500",
+        !noGutters && "px-4 py-2",
         {
           "border-gray-500 text-gray-500": disabled,
           "focus:outline focus:outline-blue-500 active:outline active:outline-blue-500":
@@ -89,6 +94,7 @@ function Button({
   variant = "primary",
   outlined = false,
   disabled = false,
+  noGutters = false,
   loading,
   children,
   ...rest
@@ -99,6 +105,7 @@ function Button({
     variant,
     loading,
     children: loading ? spinner : children,
+    noGutters,
   };
   return outlined ? <OutlinedButton {...props} /> : <FilledButton {...props} />;
 }

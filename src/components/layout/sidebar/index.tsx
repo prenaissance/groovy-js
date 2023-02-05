@@ -1,9 +1,12 @@
-import React, { memo } from "react";
+import { memo, useMemo } from "react";
 import clsx from "clsx";
-import { BsCollection } from "react-icons/bs";
+import { AiFillStar } from "react-icons/ai";
+import { BsMusicNoteList } from "react-icons/bs";
+
+import { trpc } from "@utils/trpc";
 import Hamburger from "@components/ui/icons/Hamburger";
 import HoverLink from "@components/ui/HoverLink";
-import { AiFillStar } from "react-icons/ai";
+import AddPlaylist from "./AddPlaylist";
 
 type Props = {
   isOpen: boolean;
@@ -12,6 +15,13 @@ type Props = {
 
 // TODO: Make a proper modal, there are problems with focusing other elements while open
 function Sidebar({ isOpen, onCollapse }: Props) {
+  const playlistsQuery = trpc.playlists.getPlaylistTitles.useQuery();
+  const playlists = useMemo(
+    () =>
+      (playlistsQuery.data ?? []).filter(({ title }) => title !== "Favorites"),
+    [playlistsQuery.data],
+  );
+
   return (
     <>
       <div
@@ -37,12 +47,20 @@ function Sidebar({ isOpen, onCollapse }: Props) {
               Favorites
             </div>
           </HoverLink>
-          <HoverLink onClick={onCollapse} href="/playlists">
-            <div className="flex items-center gap-2">
-              <BsCollection size="24px" />
-              Playlists
-            </div>
-          </HoverLink>
+          <p>Playlists</p>
+          {playlists.map(({ id, title }) => (
+            <HoverLink
+              key={id}
+              onClick={onCollapse}
+              href={`/playlists/${title}`}
+            >
+              <div className="flex items-center gap-2">
+                <BsMusicNoteList size="24px" />
+                {title}
+              </div>
+            </HoverLink>
+          ))}
+          <AddPlaylist />
         </div>
       </div>
       <div
