@@ -1,70 +1,27 @@
-import { useCallback, useEffect, useState } from "react";
-import { shallow } from "zustand/shallow";
+import { useCallback } from "react";
 import Image from "next/image";
 import {
-  BsVolumeDown,
-  BsVolumeUp,
-  BsVolumeMute,
   BsSkipStartFill,
   BsPlayCircleFill,
   BsPauseFill,
   BsSkipEndFill,
 } from "react-icons/bs";
 
+import "@stores/audio";
 import ShallowButton from "@components/ui/ShallowButton";
 import SliderInput from "@components/ui/SliderInput";
+import type { PlayerStore } from "@stores/usePlayerStore";
 import usePlayerStore from "@stores/usePlayerStore";
-import { isClient } from "@shared/utilities/isomorphism";
 import AudioControlContainer from "./AudioControlContainer";
 import VolumeRocker from "./VolumeRocker";
 
-const audio = (isClient() ? new Audio() : null)!;
+const { setIsPlaying } = usePlayerStore.getState();
+const currentSongSelector = (state: PlayerStore) => state.currentSong;
+const isPlayingSelector = (state: PlayerStore) => state.isPlaying;
 
 function AudioControlClient() {
-  const { song, volume, setCurrentTime } = usePlayerStore(
-    (state) => ({
-      song: state.currentSong,
-      volume: state.volume,
-      currentTime: state.currentTime,
-      setCurrentTime: state.setCurrentTime,
-      setVolume: state.setVolume,
-    }),
-    shallow,
-  );
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  useEffect(() => {
-    if (song) {
-      audio.crossOrigin = "anonymous";
-      audio.src = song.songUrl;
-      audio.currentTime = usePlayerStore.getState().currentTime;
-    }
-  }, [song]);
-
-  useEffect(() => {
-    audio.volume = volume;
-  }, [volume]);
-
-  useEffect(() => {
-    let interval: number | null = null;
-
-    if (isPlaying) {
-      audio.play();
-      interval = window.setInterval(() => {
-        if (audio.currentTime < audio.duration) {
-          setCurrentTime(Math.floor(audio.currentTime));
-        }
-      }, 1000);
-    } else {
-      audio.pause();
-    }
-
-    return () => {
-      if (interval) {
-        window.clearInterval(interval);
-      }
-    };
-  }, [isPlaying, setCurrentTime]);
+  const song = usePlayerStore(currentSongSelector);
+  const isPlaying = usePlayerStore(isPlayingSelector);
 
   const PlayOrPauseButton = useCallback(
     () => (
@@ -109,14 +66,16 @@ function AudioControlClient() {
           <div className="h-16 w-16 rounded-sm border border-accent-light" />
         )}
       </div>
-      <div className="flex items-center gap-4 justify-self-center">
-        <ShallowButton disabled>
-          <BsSkipStartFill size="48px" />
-        </ShallowButton>
-        <PlayOrPauseButton />
-        <ShallowButton disabled>
-          <BsSkipEndFill size="48px" />
-        </ShallowButton>
+      <div className="justify-self-center">
+        <div className="flex items-center gap-4">
+          <ShallowButton disabled>
+            <BsSkipStartFill size="48px" />
+          </ShallowButton>
+          <PlayOrPauseButton />
+          <ShallowButton disabled>
+            <BsSkipEndFill size="48px" />
+          </ShallowButton>
+        </div>
       </div>
       <VolumeRocker />
     </AudioControlContainer>

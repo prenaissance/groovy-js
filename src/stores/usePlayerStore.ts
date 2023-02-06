@@ -1,37 +1,35 @@
-import type { Song } from "@prisma/client";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, subscribeWithSelector } from "zustand/middleware";
 
-interface PlaylistState {
+import type { SongDto } from "@shared/songs/types";
+
+interface PlayerState {
+  isPlaying: boolean;
   playlist?: {
     id: string;
     index: number;
   } | void;
-  currentSong?:
-    | (Song & {
-        artist: {
-          id: string;
-          name: string;
-        };
-        imageUrl: string;
-      })
-    | void;
+  currentSong?: SongDto | void;
   volume: number;
   currentTime: number;
 }
 
-type PlaylistActions = {
-  setPlaylist: (playlist: PlaylistState["playlist"]) => void;
-  setCurrentSong: (song: PlaylistState["currentSong"]) => void;
+type PlayerActions = {
+  setPlaylist: (playlist: PlayerState["playlist"]) => void;
+  setCurrentSong: (song: PlayerState["currentSong"]) => void;
   moveToNextSong: () => void;
   moveToPreviousSong: () => void;
   setVolume: (volume: number) => void;
   setCurrentTime: (time: number) => void;
+  setIsPlaying: (isPlaying: boolean) => void;
 };
 
-const usePlayerStore = create<PlaylistState & PlaylistActions>()(
+export type PlayerStore = PlayerState & PlayerActions;
+
+const usePlayerStore = create<PlayerState & PlayerActions>()(
   persist(
-    (set) => ({
+    subscribeWithSelector((set) => ({
+      isPlaying: false,
       volume: 0.5,
       currentTime: 0,
       setVolume: (volume) => set({ volume }),
@@ -40,11 +38,17 @@ const usePlayerStore = create<PlaylistState & PlaylistActions>()(
       moveToNextSong: () => {},
       moveToPreviousSong: () => {},
       setCurrentTime: (time) => set({ currentTime: time }),
-    }),
+      setIsPlaying: (isPlaying) => set({ isPlaying }),
+    })),
     {
       name: "playlist",
     },
   ),
 );
+
+// on first page load
+usePlayerStore.setState({
+  isPlaying: false,
+});
 
 export default usePlayerStore;
