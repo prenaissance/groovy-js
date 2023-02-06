@@ -4,12 +4,28 @@ import type {
   InputHTMLAttributes,
   PointerEventHandler,
 } from "react";
-import { useCallback, useRef, memo } from "react";
+import { useMemo, useCallback, useRef, memo } from "react";
 
 const minmax = (min: number, max: number, value: number) => {
   if (value < min) return min;
   if (value > max) return max;
   return value;
+};
+
+const inputToNumber = (
+  value: string | number | readonly string[] | undefined,
+) => {
+  if (typeof value === "string") {
+    return parseInt(value, 10);
+  }
+  if (Array.isArray(value)) {
+    return parseInt(value[0], 10);
+  }
+  if (typeof value === "number") {
+    return value;
+  }
+
+  return NaN;
 };
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
@@ -32,7 +48,12 @@ function SliderInput({
   const { className, onChange } = props;
 
   const value = useRef(defaultValue);
-  const percentage = useRef(((defaultValue - min) / (max - min)) * 100);
+  const percentage = useMemo(
+    () =>
+      (((inputToNumber(props.value) || value.current) - min) / (max - min)) *
+      100,
+    [value, min, max, props.value],
+  );
   const sliderRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const pointerId = useRef<number | null>(null);
@@ -44,7 +65,6 @@ function SliderInput({
       const newPercentage = ((newValue - min) / (max - min)) * 100;
 
       value.current = newValue;
-      percentage.current = newPercentage;
       onChange?.(newValue);
 
       sliderRef.current!.style.setProperty("--percentage", `${newPercentage}%`);
@@ -88,14 +108,14 @@ function SliderInput({
         className,
         "after:w-[calc(100% - var(--percentage))] relative h-1 w-16 cursor-pointer rounded-full bg-primary-dark before:absolute before:left-0 before:top-0 before:h-full before:w-[var(--percentage)] before:rounded-full before:bg-accent-light before:content-[''] after:absolute after:right-0 after:top-0 after:h-full after:rounded-full after:bg-primary-contrast after:content-['']",
       )}
-      style={{ "--percentage": `${percentage.current}%` } as any}
+      style={{ "--percentage": `${percentage}%` } as any}
       onClick={handleSliderClick}
       ref={sliderRef}
       onPointerDown={handleThumbPointerDown}
       onPointerMove={handleSliderHeadMove}
       onPointerUp={handleSliderHeadPointerUp}
       onPointerLeave={handleSliderHeadPointerUp}
-      data-percentage={`${percentage.current}%`}
+      data-percentage={`${percentage}%`}
     >
       <input
         {...props}

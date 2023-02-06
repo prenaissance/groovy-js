@@ -20,7 +20,6 @@ type PlayerActions = {
   moveToNextSong: () => void;
   moveToPreviousSong: () => void;
   setVolume: (volume: number) => void;
-  setCurrentTime: (time: number) => void;
   setIsPlaying: (isPlaying: boolean) => void;
 };
 
@@ -37,7 +36,6 @@ const usePlayerStore = create<PlayerState & PlayerActions>()(
       setCurrentSong: (song) => set({ currentSong: song, currentTime: 0 }),
       moveToNextSong: () => {},
       moveToPreviousSong: () => {},
-      setCurrentTime: (time) => set({ currentTime: time }),
       setIsPlaying: (isPlaying) => set({ isPlaying }),
     })),
     {

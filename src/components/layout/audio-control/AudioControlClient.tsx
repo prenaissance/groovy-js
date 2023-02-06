@@ -14,6 +14,7 @@ import type { PlayerStore } from "@stores/usePlayerStore";
 import usePlayerStore from "@stores/usePlayerStore";
 import AudioControlContainer from "./AudioControlContainer";
 import VolumeRocker from "./VolumeRocker";
+import PlaytimeSlider from "./PlaytimeSlider";
 
 const { setIsPlaying } = usePlayerStore.getState();
 const currentSongSelector = (state: PlayerStore) => state.currentSong;
@@ -66,8 +67,8 @@ function AudioControlClient() {
           <div className="h-16 w-16 rounded-sm border border-accent-light" />
         )}
       </div>
-      <div className="justify-self-center">
-        <div className="flex items-center gap-4">
+      <div className="items-center justify-self-center">
+        <div className="flex items-center justify-center gap-4">
           <ShallowButton disabled>
             <BsSkipStartFill size="48px" />
           </ShallowButton>
@@ -76,6 +77,7 @@ function AudioControlClient() {
             <BsSkipEndFill size="48px" />
           </ShallowButton>
         </div>
+        <PlaytimeSlider />
       </div>
       <VolumeRocker />
     </AudioControlContainer>

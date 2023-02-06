@@ -24,6 +24,10 @@ usePlayerStore.subscribe(
   (song) => {
     if (song) {
       globalAudio.src = song.songUrl;
+
+      if (usePlayerStore.getState().isPlaying) {
+        globalAudio.play();
+      }
     }
   },
 );
