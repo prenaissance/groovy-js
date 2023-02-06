@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { BsVolumeDown, BsVolumeMute, BsVolumeUp } from "react-icons/bs";
 
-import ShallowButton from "@components/ui/ShallowButton";
 import SliderInput from "@components/ui/SliderInput";
 import usePlayerStore from "@stores/usePlayerStore";
 import FavoriteStar from "@components/songs/FavoriteStar";
@@ -34,7 +33,7 @@ function VolumeRocker() {
     <div className="volume mr-2 flex items-center gap-2 justify-self-end">
       {!!song && (
         <>
-          <SongOptions size="32px" songId={song.id} position="left" />
+          <SongOptions size="32px" songId={song.id} position="top" />
           <FavoriteStar size="24px" songId={song.id} />
         </>
       )}

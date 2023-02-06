@@ -47,7 +47,7 @@ function SongOptions({ songId, size = "32px", position = "bottom" }: Props) {
   const playlistsQuery = trpc.playlists.getPlayLists.useQuery(undefined, {
     select: (data) =>
       data
-        .filter((playlist) => playlist.songs.some(({ id }) => id !== songId))
+        .filter((playlist) => playlist.songs.every(({ id }) => id !== songId))
         .map(({ id, title }) => ({ id, title })),
   });
   const shownPlaylists = playlistsQuery.data ?? [];

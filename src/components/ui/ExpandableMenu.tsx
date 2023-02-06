@@ -90,7 +90,7 @@ function ExpandableMenu({
         id={listId}
         role="menu"
         className={clsx(
-          "absolute -top-1/4 -left-1/2 z-[10] w-max break-keep rounded-md border border-accent-light bg-secondary-dark py-1 px-2 shadow-md",
+          "absolute -top-1 z-[10] w-max break-keep rounded-md border border-accent-light bg-secondary-dark py-1 px-2 shadow-md",
           left && "left-0 -translate-x-full",
           right && "right-0 translate-x-full",
           top && "-translate-y-full",
