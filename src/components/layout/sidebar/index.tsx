@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import clsx from "clsx";
 import { AiFillStar } from "react-icons/ai";
 import { BsMusicNoteList } from "react-icons/bs";
@@ -15,12 +15,10 @@ type Props = {
 
 // TODO: Make a proper modal, there are problems with focusing other elements while open
 function Sidebar({ isOpen, onCollapse }: Props) {
-  const playlistsQuery = trpc.playlists.getPlaylistTitles.useQuery();
-  const playlists = useMemo(
-    () =>
-      (playlistsQuery.data ?? []).filter(({ title }) => title !== "Favorites"),
-    [playlistsQuery.data],
-  );
+  const playlistsQuery = trpc.playlists.getPlaylistTitles.useQuery(undefined, {
+    select: (data) => data.filter(({ title }) => title !== "Favorites"),
+  });
+  const playlists = playlistsQuery.data ?? [];
 
   return (
     <>

@@ -5,7 +5,7 @@ import type { Position } from "@components/ui/ExpandableMenu";
 import ShallowButton from "@components/ui/ShallowButton";
 import { trpc } from "@utils/trpc";
 import type { ReactNode } from "react";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 
 type AddToPLaylistProps = {
   songId: string;
@@ -44,14 +44,13 @@ type Props = {
 };
 
 function SongOptions({ songId, size = "32px", position = "bottom" }: Props) {
-  const playlistsQuery = trpc.playlists.getPlayLists.useQuery();
-  const shownPlaylists = useMemo(
-    () =>
-      (playlistsQuery.data ?? [])
-        .filter((playlist) => !playlist.songs.some(({ id }) => id === songId))
+  const playlistsQuery = trpc.playlists.getPlayLists.useQuery(undefined, {
+    select: (data) =>
+      data
+        .filter((playlist) => playlist.songs.some(({ id }) => id !== songId))
         .map(({ id, title }) => ({ id, title })),
-    [playlistsQuery.data, songId],
-  );
+  });
+  const shownPlaylists = playlistsQuery.data ?? [];
 
   return (
     <ExpandableMenu
