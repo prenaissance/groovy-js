@@ -1,13 +1,10 @@
-import { SongDto } from "@shared/songs/types";
+import type { SongDto } from "@shared/songs/types";
 import { TRPCError } from "@trpc/server";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import { z } from "zod";
 import { protectedProcedure, router } from "../../trpc";
-import {
-  PlaylistInput,
-  PlaylistInputSchema,
-  PlaylistSongInputSchema,
-} from "./schemas";
+import type { PlaylistInput } from "./schemas";
+import { PlaylistInputSchema, PlaylistSongInputSchema } from "./schemas";
 import { ensureOwnPlaylist } from "./validators";
 
 const getPlaylistWhereQuery = (input: PlaylistInput & { session: Session }) => {
@@ -36,6 +33,39 @@ export const playlistsRouter = router({
     });
 
     return playlists;
+  }),
+
+  getPlayLists: protectedProcedure.query(async ({ ctx }) => {
+    const { prisma, session } = ctx;
+
+    const playlists = await prisma.playlist.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      select: {
+        id: true,
+        title: true,
+        playlistSongs: {
+          select: {
+            song: {
+              select: {
+                title: true,
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return playlists.map(({ id, title, playlistSongs }) => ({
+      id,
+      title,
+      songs: playlistSongs.map(({ song }) => ({
+        id: song.id,
+        title: song.title,
+      })),
+    }));
   }),
 
   getPlaylist: protectedProcedure

@@ -1,12 +1,15 @@
+import type { KeyboardEvent } from "react";
+import { useEffect, useRef, useCallback, useMemo, useState } from "react";
+
+import { useForm } from "react-hook-form";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { z } from "zod";
+
 import Button from "@components/ui/Button";
 import ShallowButton from "@components/ui/ShallowButton";
 import TextField from "@components/ui/TextField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@utils/trpc";
-import { useCallback, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import { z } from "zod";
 
 function AddPlaylist() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -16,11 +19,21 @@ function AddPlaylist() {
     () => playlistsQuery.data ?? [],
     [playlistsQuery.data],
   );
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const shouldFocusOnRenderRef = useRef(false);
+
+  useEffect(() => {
+    if (shouldFocusOnRenderRef.current) {
+      buttonRef.current?.focus();
+      shouldFocusOnRenderRef.current = false;
+    }
+  }, [isFormOpen]);
 
   const mutate = trpc.playlists.createPlaylist.useMutation({
     onSuccess: () => {
       queryClient.playlists.invalidate();
       setIsFormOpen(false);
+      shouldFocusOnRenderRef.current = true;
     },
   });
 
@@ -51,8 +64,20 @@ function AddPlaylist() {
     [mutate],
   );
 
+  const handleFormOpen = useCallback(() => {
+    setIsFormOpen(true);
+  }, []);
+
+  const handleFormEscape = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Escape") {
+      setIsFormOpen(false);
+      shouldFocusOnRenderRef.current = true;
+      e.stopPropagation();
+    }
+  }, []);
+
   return (
-    <div className="flex items-center gap-2 pl-2">
+    <div className="flex items-center gap-2 pl-2" onKeyDown={handleFormEscape}>
       {isFormOpen ? (
         <>
           <AiOutlinePlusCircle size="24px" />
@@ -72,10 +97,9 @@ function AddPlaylist() {
         </>
       ) : (
         <ShallowButton
+          ref={buttonRef}
           className="flex w-auto items-center gap-2"
-          onClick={() => {
-            setIsFormOpen(true);
-          }}
+          onClick={handleFormOpen}
         >
           <AiOutlinePlusCircle size="24px" />
           Add playlist

@@ -62,7 +62,7 @@ function SongItem({ song, className, listIndex, ...rest }: Props) {
       </td>
       <div className="invisible absolute right-4 top-1/2 flex -translate-y-1/2 items-center space-x-2 group-focus-within:visible group-hover:visible">
         <FavoriteStar songId={song.id} size="24px" />
-        <SongOptions songId={song.id} size="32px" position="bottom-left" />
+        <SongOptions songId={song.id} size="32px" position="left" />
       </div>
     </tr>
   );

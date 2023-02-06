@@ -60,7 +60,7 @@ function PlaylistPage({
         <title>{`Playlist - ${title}`}</title>
       </Head>
       <SongTable
-        className="w-none mx-4 lg:mx-8 xl:mx-12"
+        className="m-4 lg:m-8 xl:m-12"
         caption={`${title} playlist songs`}
         songs={playlistQuery.data?.songs ?? []}
       />

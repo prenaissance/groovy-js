@@ -2,10 +2,10 @@ import { forwardRef, memo } from "react";
 import type { ButtonHTMLAttributes, Ref } from "react";
 import clsx from "clsx";
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement>;
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & { noDarken?: boolean };
 
 function ShallowButton(
-  { className, disabled, ...rest }: Props,
+  { className, disabled, noDarken = false, ...rest }: Props,
   ref: Ref<HTMLButtonElement>,
 ) {
   const props = {
@@ -20,7 +20,7 @@ function ShallowButton(
         {
           "text cursor-not-allowed text-gray-500": disabled,
           "text-primary-contrast hover:brightness-75 active:brightness-75":
-            !disabled,
+            !noDarken && !disabled,
         },
         className,
       )}

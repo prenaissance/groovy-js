@@ -63,11 +63,16 @@ function ExpandableMenu({
     if (timeoutIdRef.current) {
       window.clearTimeout(timeoutIdRef.current);
     }
-    timeoutIdRef.current = window.setTimeout(() => setIsExpanded(false), 300);
+    timeoutIdRef.current = window.setTimeout(() => setIsExpanded(false), 500);
+  }, []);
+
+  const handleStopPropagation = useCallback((e: MouseEvent<any>) => {
+    e.stopPropagation();
   }, []);
 
   return (
     <ShallowButton
+      noDarken
       ref={buttonRef}
       aria-label="Open menu"
       aria-haspopup
@@ -78,17 +83,18 @@ function ExpandableMenu({
       onPointerOver={handleExpand}
       onKeyDown={handleEscape}
       onPointerLeave={handleDelayedCollapse}
+      onMouseOver={handleStopPropagation}
     >
       {buttonContent}
       <ul
         id={listId}
         role="menu"
         className={clsx(
-          "absolute -top-1/2 -left-1/2 z-[10]",
-          left && "left-0 -translate-x-1/2",
-          right && "right-0 translate-x-1/2",
-          top && "-translate-y-1/2",
-          bottom && "translate-y-1/2",
+          "absolute -top-1/4 -left-1/2 z-[10] w-max break-keep rounded-md border border-accent-light bg-secondary-dark py-1 px-2 shadow-md",
+          left && "left-0 -translate-x-full",
+          right && "right-0 translate-x-full",
+          top && "-translate-y-full",
+          bottom && "translate-y-full",
           !isExpanded && "hidden",
           isExpanded && "block",
           className,

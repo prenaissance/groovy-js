@@ -5,6 +5,7 @@ import ShallowButton from "@components/ui/ShallowButton";
 import SliderInput from "@components/ui/SliderInput";
 import usePlayerStore from "@stores/usePlayerStore";
 import FavoriteStar from "@components/songs/FavoriteStar";
+import SongOptions from "@components/songs/song-item/SongOptions";
 
 function VolumeRocker() {
   const song = usePlayerStore((state) => state.currentSong);
@@ -31,7 +32,12 @@ function VolumeRocker() {
 
   return (
     <div className="volume mr-2 flex items-center gap-2 justify-self-end">
-      {!!song && <FavoriteStar songId={song.id} />}
+      {!!song && (
+        <>
+          <SongOptions size="32px" songId={song.id} position="left" />
+          <FavoriteStar size="24px" songId={song.id} />
+        </>
+      )}
       <VolumeIndicator />
       <SliderInput
         className="w-32"

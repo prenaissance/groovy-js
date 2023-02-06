@@ -1,9 +1,10 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
 import { Genre } from "@prisma/client";
 import { uploadBase64File, uploadUrlFile } from "@server/services/blob-storage";
 import { AddSongSchema } from "@shared/songs/schemas";
-import { SongDto } from "@shared/songs/types";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import type { SongDto } from "@shared/songs/types";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const songsRouter = router({
