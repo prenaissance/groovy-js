@@ -19,7 +19,7 @@ const formatDuration = (duration: number) => {
 
 function PlaytimeSlider({}: Props) {
   const currentTime = usePlayerStore(currentTimeSelector);
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(audio.duration);
 
   useEffect(() => {
     const handlerDurationChange = () => {

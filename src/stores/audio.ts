@@ -5,11 +5,17 @@ const globalAudio = (isClient() ? new Audio() : null)!;
 
 if (isClient()) {
   globalAudio.crossOrigin = "anonymous";
+  globalAudio.volume = usePlayerStore.getState().volume;
   globalAudio.addEventListener("timeupdate", () => {
     usePlayerStore.setState({
       currentTime: Math.floor(globalAudio.currentTime),
     });
   });
+  const song = usePlayerStore.getState().currentSong;
+  if (song) {
+    globalAudio.src = song.songUrl;
+    globalAudio.load();
+  }
 }
 
 usePlayerStore.subscribe(
@@ -24,6 +30,7 @@ usePlayerStore.subscribe(
   (song) => {
     if (song) {
       globalAudio.src = song.songUrl;
+      globalAudio.load();
 
       if (usePlayerStore.getState().isPlaying) {
         globalAudio.play();
