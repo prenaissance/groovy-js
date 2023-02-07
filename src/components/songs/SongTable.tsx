@@ -7,7 +7,6 @@ import SongItem from "./song-item";
 type Props = {
   songs: SongDto[];
   caption: string;
-  className: string;
 } & HTMLAttributes<HTMLTableElement>;
 
 function SongTable({ songs, caption, className, ...rest }: Props) {
@@ -26,7 +25,7 @@ function SongTable({ songs, caption, className, ...rest }: Props) {
       </thead>
       <tbody className="divide divide-y divide-accent-light">
         {songs.map((song, index) => (
-          <SongItem listIndex={index} key={song.id} song={song} />
+          <SongItem listIndex={index + 1} key={song.id} song={song} />
         ))}
       </tbody>
     </table>

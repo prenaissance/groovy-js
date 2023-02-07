@@ -98,7 +98,7 @@ export const playlistsRouter = router({
               },
             },
             orderBy: {
-              createdAt: "asc",
+              createdAt: "desc",
             },
           },
         },
@@ -125,10 +125,15 @@ export const playlistsRouter = router({
         }),
       );
 
+      const previewImages = flattenedPlaylist
+        .map((song) => song.imageUrl)
+        .slice(0, 3);
+
       return {
         id: playlist.id,
         title: playlist.title,
         songs: flattenedPlaylist,
+        previewImages,
       };
     }),
 
