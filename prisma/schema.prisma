@@ -29,6 +29,7 @@ model Song {
   uploadedBy   User           @relation(fields: [uploadedById], references: [id])
   uploadedById String
   PlaylistSong PlaylistSong[]
+  HistorySong  HistorySong[]
 
   @@unique([artistId, title])
   @@index([artistId, albumId])
@@ -107,15 +108,16 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?    @unique
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   uploadedSongs Song[]
   playlists     Playlist[]
+  historySongs  HistorySong[]
 }
 
 model PlaylistSong {
@@ -140,6 +142,17 @@ model Playlist {
   userId        String
 
   @@unique([userId, title])
+}
+
+model HistorySong {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  song      Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  songId    String
+
+  @@index([createdAt(sort: Desc)])
 }
 
 model VerificationToken {

@@ -6,6 +6,7 @@ import { uploadBase64File, uploadUrlFile } from "@server/services/blob-storage";
 import { AddSongSchema } from "@shared/songs/schemas";
 import type { SongDto } from "@shared/songs/types";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { mapSongsToSongDtos } from "./common/mappings";
 
 export const songsRouter = router({
   addSong: protectedProcedure
@@ -106,20 +107,7 @@ export const songsRouter = router({
         },
       });
 
-      const mappedSongs: SongDto[] = songs.map((song) => ({
-        ...song,
-        artist: {
-          id: song.artist.id,
-          name: song.artist.name,
-        },
-        album: song.album
-          ? {
-              id: song.album.id,
-              title: song.album.title,
-            }
-          : null,
-        imageUrl: song.album?.imageUrl || song.artist.imageUrl,
-      }));
+      const mappedSongs: SongDto[] = mapSongsToSongDtos(songs);
 
       const hasMore = songs.length === limit;
       const nextCursor = hasMore ? songs.at(-1)!.id : null;
