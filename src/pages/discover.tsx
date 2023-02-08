@@ -7,6 +7,7 @@ import { createContextInner } from "@server/trpc/context";
 import { Genre } from "@prisma/client";
 import SongCarousel from "@components/discover/song-carousel";
 import Head from "next/head";
+import useMediaQuery from "@hooks/useMediaQuery";
 
 const DISPLAYED_GENRES = [Genre.Metal, Genre.Rock, Genre.Electronic] as const;
 
@@ -35,6 +36,9 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 function Discover({}: InferGetStaticPropsType<typeof getStaticProps>) {
+  const isLessThanLg = useMediaQuery("(max-width: 1023px)");
+  const songsPerPage = isLessThanLg ? 2 : 3;
+
   return (
     <>
       <Head>
@@ -47,7 +51,12 @@ function Discover({}: InferGetStaticPropsType<typeof getStaticProps>) {
       <div className="absolute left-1/2 w-full max-w-screen-lg -translate-x-1/2">
         <SongCarousel className="w-full" />
         {DISPLAYED_GENRES.map((genre) => (
-          <SongCarousel className="w-full" key={genre} genre={genre} />
+          <SongCarousel
+            className="w-full"
+            key={genre}
+            genre={genre}
+            songsPerPage={songsPerPage}
+          />
         ))}
         <div className="invisible h-20" />
       </div>

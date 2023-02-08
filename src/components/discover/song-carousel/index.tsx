@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import type { Genre, Song } from "@prisma/client";
+import type { Genre } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import ShallowButton from "@components/ui/ShallowButton";
 import usePlayerStore from "@stores/usePlayerStore";
@@ -10,14 +10,18 @@ import SongCard from "./SongCard";
 type Props = {
   genre?: Genre;
   className?: string;
+  songsPerPage?: number;
+  limit?: number;
 };
 
-const DEFAULT_LIMIT = 6;
-const SONGS_PER_PAGE = 3;
-
-function SongCarousel({ genre, className }: Props) {
+function SongCarousel({
+  genre,
+  className,
+  songsPerPage = 3,
+  limit = 6,
+}: Props) {
   const songsQuery = trpc.songs.getSongs.useInfiniteQuery(
-    { genre, limit: DEFAULT_LIMIT },
+    { genre, limit },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     },
@@ -32,17 +36,17 @@ function SongCarousel({ genre, className }: Props) {
   );
 
   const canMoveToNextPage =
-    hasNextPage || page + 1 < loadedSongs.length / SONGS_PER_PAGE;
+    hasNextPage || page + 1 < loadedSongs.length / songsPerPage;
 
   useEffect(() => {
     // optimistically fetch next page if there are 3 or less songs left
     if (!hasNextPage) return;
 
-    const lastSongIndex = (page + 1) * SONGS_PER_PAGE;
-    if (lastSongIndex + SONGS_PER_PAGE >= loadedSongs.length) {
+    const lastSongIndex = (page + 1) * songsPerPage;
+    if (lastSongIndex + songsPerPage >= loadedSongs.length) {
       fetchNextPage();
     }
-  }, [page, fetchNextPage, loadedSongs.length, hasNextPage]);
+  }, [page, fetchNextPage, loadedSongs.length, hasNextPage, songsPerPage]);
 
   const handleChangePageLeft = useCallback(
     () => setPage((lastPage) => lastPage - 1),
@@ -77,7 +81,7 @@ function SongCarousel({ genre, className }: Props) {
         </ShallowButton>
         <div className="grid aspect-[3/1] h-full flex-1 translate-x-0 grid-cols-3 gap-4 transition-transform duration-300 ease-in-out">
           {loadedSongs
-            .slice(page * SONGS_PER_PAGE, (page + 1) * SONGS_PER_PAGE)
+            .slice(page * songsPerPage, (page + 1) * songsPerPage)
             .map((song) => (
               <SongCard
                 key={song.id}

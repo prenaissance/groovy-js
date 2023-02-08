@@ -22,7 +22,16 @@ function AuthShowcase() {
 
 const features = ["Upload songs", "Music player", "Playlists", "Favorites"];
 
-const upcomingFeatures = ["Search for songs", "History", "Equalizer", "PWA"];
+const upcomingFeatures = [
+  "Search for songs",
+  "History",
+  "Equalizer",
+  "PWA",
+  "Queue",
+  "Edit own songs",
+  "Increased accessibility on upload",
+  "More responsive layout (audio player, playlists)",
+];
 
 function Home() {
   return (
@@ -33,7 +42,7 @@ function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-8 ">
         <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
           Groovy.<span className="text-amber-300">js</span>
         </h1>
@@ -55,7 +64,7 @@ function Home() {
             </ul>
           </section>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="mb-16 flex flex-col items-center gap-2">
           <AuthShowcase />
         </div>
       </div>
