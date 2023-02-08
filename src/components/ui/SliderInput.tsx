@@ -12,28 +12,16 @@ const minmax = (min: number, max: number, value: number) => {
   return value;
 };
 
-const inputToNumber = (
-  value: string | number | readonly string[] | undefined,
-) => {
-  if (typeof value === "string") {
-    return parseInt(value, 10);
-  }
-  if (Array.isArray(value)) {
-    return parseInt(value[0], 10);
-  }
-  if (typeof value === "number") {
-    return value;
-  }
-
-  return NaN;
-};
-
-type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
+type Props = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "value"
+> & {
   onChange?: (value: number) => void;
   min?: number;
   max?: number;
   defaultValue?: number;
   noThumb?: boolean;
+  value?: number;
 };
 
 // Skipping rerendering for performance and instant feedback
@@ -47,11 +35,9 @@ function SliderInput({
   const props = { min, max, defaultValue, ...rest };
   const { className, onChange } = props;
 
-  const value = useRef(defaultValue);
+  const value = useRef(props.value ?? props.defaultValue);
   const percentage = useMemo(
-    () =>
-      (((inputToNumber(props.value) || value.current) - min) / (max - min)) *
-      100,
+    () => (((props.value ?? value.current) - min) / (max - min)) * 100,
     [value, min, max, props.value],
   );
   const sliderRef = useRef<HTMLDivElement>(null);

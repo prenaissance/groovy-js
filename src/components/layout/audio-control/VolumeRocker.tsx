@@ -42,7 +42,7 @@ function VolumeRocker() {
         className="w-32"
         min={0}
         max={1}
-        defaultValue={volume}
+        value={volume}
         onChange={handleChangeVolume}
       />
     </div>
