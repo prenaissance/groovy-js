@@ -48,7 +48,7 @@ function AudioControlClient() {
 
   return (
     <AudioControlContainer>
-      <div className="flex w-full gap-1 self-start justify-self-start text-primary-contrast">
+      <div className="hidden w-full gap-1 self-start justify-self-start text-primary-contrast md:flex">
         {song ? (
           <>
             <Image
